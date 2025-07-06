@@ -18,6 +18,7 @@ export interface Link {
   url: string;
   description: string | null;
   iconUrl: string | null;
+  emoji: string | null;
   isActive: boolean;
   order: number;
   clicks: number;
@@ -76,6 +77,7 @@ export async function createLink(userId: string, input: CreateLinkInput) {
         url: validatedData.url,
         description: validatedData.description || null,
         iconUrl: validatedData.iconUrl || null,
+        emoji: validatedData.emoji || null,
         profileId: profile.id,
         order: newOrder,
       },
@@ -107,6 +109,7 @@ export async function updateLink(linkId: string, input: UpdateLinkInput) {
       url: string;
       description: string | null;
       iconUrl: string | null;
+      emoji: string | null;
       isActive: boolean;
     }> = {};
 
@@ -118,6 +121,9 @@ export async function updateLink(linkId: string, input: UpdateLinkInput) {
     }
     if (validatedData.iconUrl !== undefined) {
       updateData.iconUrl = validatedData.iconUrl || null;
+    }
+    if (validatedData.emoji !== undefined) {
+      updateData.emoji = validatedData.emoji || null;
     }
     if (validatedData.isActive !== undefined)
       updateData.isActive = validatedData.isActive;

@@ -107,6 +107,7 @@ model Link {
   url         String
   description String?
   iconUrl     String?
+  emoji       String?
   isActive    Boolean  @default(true)
   order       Int      @default(0)
   clicks      Int      @default(0)

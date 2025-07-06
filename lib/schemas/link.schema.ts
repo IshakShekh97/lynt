@@ -18,6 +18,10 @@ export const createLinkSchema = z.object({
     .optional()
     .or(z.literal(""))
     .transform((val) => (val === "" ? undefined : val)),
+  emoji: z
+    .string()
+    .optional()
+    .transform((val) => val || undefined),
 });
 
 export const updateLinkSchema = createLinkSchema.partial().extend({

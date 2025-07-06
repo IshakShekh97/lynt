@@ -27,7 +27,8 @@
 
 - **Drag & Drop Reordering**: Intuitive link reordering with React DND
 - **CRUD Operations**: Add, edit, delete, and toggle link visibility
-- **Rich Link Data**: Custom titles, descriptions, icons, and URLs
+- **Rich Link Data**: Custom titles, descriptions, icons, URLs, and emojis
+- **Emoji Support**: Beautiful emoji icons using [@emoji-mart/react](https://github.com/missive/emoji-mart)
 - **Click Tracking**: Monitor link engagement and performance
 - **Bulk Operations**: Manage multiple links efficiently
 

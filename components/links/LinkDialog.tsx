@@ -33,6 +33,7 @@ import type {
 import { createLinkSchema, updateLinkSchema } from "@/lib/schemas/link.schema";
 import { toast } from "sonner";
 import { ZodIssue } from "zod";
+import { EmojiPicker } from "@/components/ui/emoji-picker";
 
 interface LinkDialogProps {
   userId: string;
@@ -58,6 +59,7 @@ function CreateLinkForm({
       url: "",
       description: "",
       iconUrl: "",
+      emoji: "",
     },
   });
 
@@ -155,6 +157,24 @@ function CreateLinkForm({
           )}
         />
 
+        <FormField
+          control={form.control}
+          name="emoji"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Emoji (optional)</FormLabel>
+              <FormControl>
+                <EmojiPicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  disabled={form.formState.isSubmitting}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <DialogFooter>
           <Button type="button" variant="outline" onClick={onCancel}>
             Cancel
@@ -192,6 +212,7 @@ function EditLinkForm({
       url: link.url,
       description: link.description || "",
       iconUrl: link.iconUrl || "",
+      emoji: link.emoji || "",
       isActive: link.isActive,
     },
   });
@@ -282,6 +303,24 @@ function EditLinkForm({
                   type="url"
                   placeholder="https://example.com/icon.png (optional)"
                   {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="emoji"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Emoji (optional)</FormLabel>
+              <FormControl>
+                <EmojiPicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  disabled={form.formState.isSubmitting}
                 />
               </FormControl>
               <FormMessage />

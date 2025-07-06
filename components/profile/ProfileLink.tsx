@@ -13,6 +13,7 @@ interface ProfileLinkProps {
     url: string;
     description: string | null;
     iconUrl: string | null;
+    emoji: string | null;
   };
   buttonColor: string;
   buttonTextColor: string;
@@ -48,7 +49,11 @@ export function ProfileLink({
         onClick={handleClick}
       >
         <div className="flex items-center gap-3">
-          {link.iconUrl && (
+          {link.emoji ? (
+            <span className="text-2xl flex-shrink-0 w-6 h-6 flex items-center justify-center">
+              {link.emoji}
+            </span>
+          ) : link.iconUrl ? (
             <div className="w-6 h-6 relative flex-shrink-0">
               <Image
                 src={link.iconUrl}
@@ -58,7 +63,7 @@ export function ProfileLink({
                 className="rounded-sm object-cover"
               />
             </div>
-          )}
+          ) : null}
 
           <div className="flex-1 min-w-0">
             <h3 className="font-medium truncate">{link.title}</h3>

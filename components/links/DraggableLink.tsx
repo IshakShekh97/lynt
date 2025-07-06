@@ -46,6 +46,31 @@ interface DragItem {
   type: string;
 }
 
+// Helper component for rendering link icon/emoji
+function LinkIconDisplay({ link }: { link: Link }) {
+  if (link.emoji) {
+    return (
+      <span className="text-2xl flex-shrink-0 w-6 h-6 flex items-center justify-center">
+        {link.emoji}
+      </span>
+    );
+  }
+
+  if (link.iconUrl) {
+    return (
+      <Image
+        src={link.iconUrl}
+        alt={`${link.title} icon`}
+        width={24}
+        height={24}
+        className="w-6 h-6 rounded-sm flex-shrink-0"
+      />
+    );
+  }
+
+  return <LinkIcon className="w-6 h-6 text-gray-500 flex-shrink-0" />;
+}
+
 // Preview version of the link (no drag and drop)
 function LinkPreview({ link }: { link: Link }) {
   const handleClick = (e: React.MouseEvent) => {
@@ -64,17 +89,7 @@ function LinkPreview({ link }: { link: Link }) {
     >
       <div className="flex items-center gap-3 p-4">
         <div className="flex items-center gap-3 flex-1 min-w-0">
-          {link.iconUrl ? (
-            <Image
-              src={link.iconUrl}
-              alt={`${link.title} icon`}
-              width={24}
-              height={24}
-              className="w-6 h-6 rounded-sm flex-shrink-0"
-            />
-          ) : (
-            <LinkIcon className="w-6 h-6 text-gray-500 flex-shrink-0" />
-          )}
+          <LinkIconDisplay link={link} />
 
           <div className="flex-1 min-w-0">
             <h3 className="font-medium text-gray-900 dark:text-gray-100 truncate">
@@ -218,17 +233,7 @@ function LinkManager({
         </div>
 
         <div className="flex items-center gap-3 flex-1 min-w-0">
-          {link.iconUrl ? (
-            <Image
-              src={link.iconUrl}
-              alt={`${link.title} icon`}
-              width={24}
-              height={24}
-              className="w-6 h-6 rounded-sm flex-shrink-0"
-            />
-          ) : (
-            <LinkIcon className="w-6 h-6 text-gray-500 flex-shrink-0" />
-          )}
+          <LinkIconDisplay link={link} />
 
           <div className="flex-1 min-w-0">
             <h3 className="font-medium text-gray-900 dark:text-gray-100 truncate">
