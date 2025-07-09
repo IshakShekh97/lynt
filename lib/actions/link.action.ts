@@ -162,6 +162,7 @@ export async function deleteLink(linkId: string) {
   }
 }
 
+// Optimized reorder links function with better performance and error handling
 export async function reorderLinks(
   userId: string,
   input: ReorderLinksInput
@@ -170,77 +171,123 @@ export async function reorderLinks(
     // Validate input
     const { linkIds } = reorderLinksSchema.parse(input);
 
-    // Get the profile
+    if (linkIds.length === 0) {
+      return { success: true, data: [] };
+    }
+
+    // Get the profile and verify ownership
     const profile = await prisma.profile.findUnique({
       where: { userId },
-      include: {
-        links: {
-          orderBy: { order: "asc" },
-        },
-      },
+      select: { id: true },
     });
 
     if (!profile) {
       return { success: false, error: "Profile not found" };
     }
 
-    // Verify all linkIds belong to this profile
-    const existingLinkIds = new Set(profile.links.map((link) => link.id));
-    const invalidLinks = linkIds.filter((id) => !existingLinkIds.has(id));
+    // Verify all links belong to this profile and get current state
+    const existingLinks = await prisma.link.findMany({
+      where: {
+        id: { in: linkIds },
+        profileId: profile.id,
+      },
+      select: { id: true, order: true },
+    });
 
-    if (invalidLinks.length > 0) {
+    // Check if all requested links exist and belong to the user
+    if (existingLinks.length !== linkIds.length) {
+      const existingIds = new Set(existingLinks.map((link) => link.id));
+      const missingIds = linkIds.filter((id) => !existingIds.has(id));
       return {
         success: false,
-        error: "Some links do not belong to this profile",
+        error: `Links not found or access denied: ${missingIds.join(", ")}`,
       };
     }
 
-    // Start a transaction to ensure all updates happen atomically
+    // Check if reordering is actually needed
+    const currentOrder = existingLinks
+      .sort((a, b) => a.order - b.order)
+      .map((link) => link.id);
+
+    if (JSON.stringify(currentOrder) === JSON.stringify(linkIds)) {
+      // No change needed, return current state
+      const links = await prisma.link.findMany({
+        where: { profileId: profile.id },
+        orderBy: { order: "asc" },
+      });
+      return { success: true, data: links };
+    }
+
+    // Perform atomic reordering using transaction
     const updatedLinks = await prisma.$transaction(async (tx) => {
-      // Step 1: Move all links to temporary negative order values to avoid constraint conflicts
-      // This prevents unique constraint violations during the reordering process
-      const tempUpdatePromises = linkIds.map((linkId, index) =>
+      // Use a two-phase update to avoid unique constraint violations
+      // Phase 1: Set temporary negative order values
+      const tempUpdates = linkIds.map((linkId, index) =>
+        tx.link.update({
+          where: {
+            id: linkId,
+            profileId: profile.id, // Double-check ownership in transaction
+          },
+          data: { order: -(index + 1) },
+        })
+      );
+
+      await Promise.all(tempUpdates);
+
+      // Phase 2: Set final order values
+      const finalUpdates = linkIds.map((linkId, index) =>
         tx.link.update({
           where: {
             id: linkId,
             profileId: profile.id,
           },
-          data: {
-            order: -(index + 1), // Use negative values as temporary placeholders
-          },
+          data: { order: index },
         })
       );
 
-      await Promise.all(tempUpdatePromises);
-
-      // Step 2: Update each link with its final order value
-      const finalUpdatePromises = linkIds.map((linkId, index) =>
-        tx.link.update({
-          where: {
-            id: linkId,
-            profileId: profile.id,
-          },
-          data: {
-            order: index, // Set the final order value
-          },
-        })
-      );
-
-      return await Promise.all(finalUpdatePromises);
+      return await Promise.all(finalUpdates);
     });
 
-    // Sort the updated links by their new order
+    // Sort by final order for consistent response
     const sortedLinks = updatedLinks.sort((a, b) => a.order - b.order);
 
+    // Revalidate relevant pages
     revalidatePath(`/dashboard`);
-    revalidatePath(`/${userId}`); // Also revalidate the profile page
+    revalidatePath(`/${userId}`);
+
     return { success: true, data: sortedLinks };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { success: false, error: "Validation failed" };
+      return {
+        success: false,
+        error: `Invalid input data: ${error.errors
+          .map((e) => e.message)
+          .join(", ")}`,
+      };
     }
+
     console.error("Error reordering links:", error);
-    return { success: false, error: "Failed to reorder links" };
+
+    // Check for specific database errors
+    if (error instanceof Error) {
+      if (error.message.includes("Unique constraint")) {
+        return {
+          success: false,
+          error: "Database constraint error. Please try again.",
+        };
+      }
+      if (error.message.includes("Record to update not found")) {
+        return {
+          success: false,
+          error: "One or more links no longer exist.",
+        };
+      }
+    }
+
+    return {
+      success: false,
+      error: "Failed to reorder links. Please try again.",
+    };
   }
 }
 
