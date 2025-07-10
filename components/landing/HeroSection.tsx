@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { FloatingGeometricShapes } from "./FloatingGeometricShapes";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -28,8 +29,11 @@ const itemVariants = {
 
 export const HeroSection = () => {
   return (
-    <section className="pt-24 pb-16 px-4">
-      <div className="container mx-auto max-w-6xl">
+    <section className="relative pt-24 pb-16 px-4 overflow-hidden">
+      {/* Background Geometric Shapes */}
+      <FloatingGeometricShapes className="opacity-20" />
+
+      <div className="container mx-auto max-w-6xl relative z-10">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -37,76 +41,79 @@ export const HeroSection = () => {
           className="text-center space-y-8"
         >
           <motion.div variants={itemVariants} className="space-y-4">
-            <Badge className="text-xs px-3 py-1">
-              THE MOST BRILLIANT LINK MANAGER
-            </Badge>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            >
+              <Badge className="text-xs px-3 py-1 hover:bg-primary/90 transition-colors duration-300">
+                THE MOST BRILLIANT LINK MANAGER
+              </Badge>
+            </motion.div>
+            <motion.h1
+              className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            >
               YOUR LINKS,
-            </h1>
-            <h1 className="px-2 text-4xl md:text-6xl lg:text-7xl font-black tracking-tight bg-secondary text-black w-fit mx-auto">
+            </motion.h1>
+            <motion.h1
+              className="px-2 text-4xl md:text-6xl lg:text-7xl font-black tracking-tight bg-secondary text-black w-fit mx-auto"
+              whileHover={{
+                scale: 1.02,
+                backgroundColor: "#000000",
+                color: "#ffffff",
+              }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            >
               BRUTALIZED
-            </h1>
-            <p className="text-lg md:text-xl max-w-2xl mx-auto text-muted-foreground">
+            </motion.h1>
+            <motion.p
+              className="text-lg md:text-xl max-w-2xl mx-auto text-muted-foreground"
+              whileHover={{ scale: 1.01 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            >
               STOP BEING BORING. CREATE LINK PAGES THAT SCREAM
               <br />
               PERSONALITY WITH OUR NEO BRUTALIST DESIGN SYSTEM.
-            </p>
+            </motion.p>
           </motion.div>
 
           <motion.div
             variants={itemVariants}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <Button size="lg" className="px-8 py-3 text-sm font-bold">
-              START BRUTALIZING
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="px-8 py-3 text-sm font-bold"
+            <motion.div
+              whileHover={{
+                scale: 1.05,
+                y: -2,
+              }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              SEE EXAMPLES
-            </Button>
+              <Button
+                size="lg"
+                className="px-8 py-3 text-sm font-bold hover:shadow-lg transition-all duration-300"
+              >
+                START BRUTALIZING
+              </Button>
+            </motion.div>
+            <motion.div
+              whileHover={{
+                scale: 1.05,
+                y: -2,
+              }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            >
+              <Button
+                variant="outline"
+                size="lg"
+                className="px-8 py-3 text-sm font-bold hover:shadow-lg transition-all duration-300"
+              >
+                SEE EXAMPLES
+              </Button>
+            </motion.div>
           </motion.div>
-
-          {/* Floating Geometric Shapes */}
-          <div className="relative mt-16">
-            <motion.div
-              animate={{
-                y: [-10, 10, -10],
-                transition: {
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut" as const,
-                },
-              }}
-              className="absolute top-0 left-1/4 w-6 h-6 bg-primary transform rotate-45"
-            />
-            <motion.div
-              animate={{
-                y: [-10, 10, -10],
-                transition: {
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut" as const,
-                  delay: 1,
-                },
-              }}
-              className="absolute top-10 right-1/4 w-4 h-4 bg-secondary border-2 border-foreground"
-            />
-            <motion.div
-              animate={{
-                y: [-10, 10, -10],
-                transition: {
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut" as const,
-                  delay: 2,
-                },
-              }}
-              className="absolute -top-5 right-1/3 w-8 h-8 bg-accent transform rotate-12"
-            />
-          </div>
         </motion.div>
       </div>
     </section>

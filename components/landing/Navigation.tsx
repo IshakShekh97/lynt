@@ -7,6 +7,7 @@ import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { useSession, signOut } from "@/lib/auth-client";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,54 +38,81 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
-            <Link
-              href="/"
-              className="text-2xl font-black text-gray-900 dark:text-white"
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              LYNTBRUT.
-            </Link>
+              <Link
+                href="/"
+                className="text-2xl font-black text-gray-900 dark:text-white"
+              >
+                LYNTBRUTT.
+              </Link>
+            </motion.div>
           </div>
 
           {/* Desktop Navigation - Center */}
           <div className="hidden md:flex items-center space-x-8">
             {session ? (
               <>
-                <Link
-                  href="/dashboard"
-                  className={cn(
-                    "text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                    pathname === "/dashboard" &&
-                      "!text-black bg-secondary border-b-4 border-r-4"
-                  )}
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -1 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
-                  Dashboard
-                </Link>
-                <Link
-                  href="/profile"
-                  className={cn(
-                    "text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                    pathname === "/profile" &&
-                      "!text-black bg-secondary border-b-4 border-r-4"
-                  )}
+                  <Link
+                    href="/dashboard"
+                    className={cn(
+                      "text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                      pathname === "/dashboard" &&
+                        "!text-black bg-secondary border-b-4 border-r-4"
+                    )}
+                  >
+                    Dashboard
+                  </Link>
+                </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -1 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
-                  Profile
-                </Link>
+                  <Link
+                    href="/profile"
+                    className={cn(
+                      "text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                      pathname === "/profile" &&
+                        "!text-black bg-secondary border-b-4 border-r-4"
+                    )}
+                  >
+                    Profile
+                  </Link>
+                </motion.div>
               </>
             ) : (
               <>
-                <Button
-                  variant="ghost"
-                  onClick={() => router.push("/sign-in")}
-                  className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -1 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
-                  Sign In
-                </Button>
-                <Button
-                  onClick={() => router.push("/sign-up")}
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                  <Button
+                    variant="ghost"
+                    onClick={() => router.push("/sign-in")}
+                    className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                  >
+                    Sign In
+                  </Button>
+                </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -1 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
-                  Get Started
-                </Button>
+                  <Button
+                    onClick={() => router.push("/sign-up")}
+                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    Get Started
+                  </Button>
+                </motion.div>
               </>
             )}
           </div>
@@ -149,18 +177,24 @@ export default function Navigation() {
 
           {/* Mobile menu button */}
           <div className="md:hidden">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleMenu}
-              className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+            <motion.div
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              {isMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleMenu}
+                className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+              >
+                {isMenuOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Menu className="h-6 w-6" />
+                )}
+              </Button>
+            </motion.div>
           </div>
         </div>
       </div>

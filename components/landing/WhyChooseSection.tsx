@@ -74,11 +74,16 @@ export const WhyChooseSection = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           className="text-4xl md:text-5xl font-black text-center mb-16"
+          whileHover={{ scale: 1.02 }}
         >
           WHY CHOOSE{" "}
-          <span className="bg-secondary px-2 uppercase text-black">
+          <motion.span
+            className="bg-secondary px-2 uppercase text-black"
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          >
             LinkBrut?
-          </span>
+          </motion.span>
         </motion.h2>
 
         <motion.div
@@ -89,10 +94,24 @@ export const WhyChooseSection = () => {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
         >
           {features.map((feature, index) => (
-            <motion.div key={index} variants={itemVariants}>
-              <Card className="border-2 border-foreground shadow-[4px_4px_0px_0px_theme(colors.foreground)] h-full">
+            <motion.div
+              key={index}
+              variants={itemVariants}
+              whileHover={{
+                scale: 1.05,
+                y: -5,
+                transition: { type: "spring", stiffness: 400, damping: 17 },
+              }}
+            >
+              <Card className="border-2 border-foreground shadow-[4px_4px_0px_0px_theme(colors.foreground)] h-full transition-all duration-300 hover:shadow-[6px_6px_0px_0px_theme(colors.foreground)]">
                 <CardHeader className="text-center">
-                  <div className="text-4xl mb-4">{feature.icon}</div>
+                  <motion.div
+                    className="text-4xl mb-4"
+                    whileHover={{ scale: 1.2, rotate: 5 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  >
+                    {feature.icon}
+                  </motion.div>
                   <CardTitle className="text-lg font-black">
                     {feature.title}
                   </CardTitle>
