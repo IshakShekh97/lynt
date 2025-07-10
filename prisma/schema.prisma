@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -15,17 +16,15 @@ model User {
   image         String?
   createdAt     DateTime
   updatedAt     DateTime
-  username      String
-  displayName   String?
-  avatarUrl     String?
-  bio           String?
   sessions      Session[]
   accounts      Account[]
-  Profile       Profile?
+
+  username        String?
+  displayUsername String?
 
   @@unique([email])
-  @@unique([username])
   @@map("user")
+  @@unique([username])
 }
 
 model Session {
@@ -71,52 +70,4 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
-}
-
-model RateLimit {
-  id          String  @id
-  key         String?
-  count       Int?
-  lastRequest BigInt?
-
-  @@map("rateLimit")
-}
-
-model Profile {
-  id              String  @id @default(cuid())
-  userId          String  @unique
-  backgroundColor String  @default("#ffffff")
-  buttonColor     String  @default("#000000")
-  buttonTextColor String  @default("#ffffff")
-  textColor       String  @default("#000000")
-  fontStyle       String  @default("font-sans")
-  backgroundImage String?
-  isPublic        Boolean @default(true)
-  customCss       String?
-
-  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  links Link[]
-
-  @@map("profiles")
-}
-
-model Link {
-  id          String   @id @default(cuid())
-  profileId   String
-  title       String
-  url         String
-  description String?
-  iconUrl     String?
-  emoji       String?
-  isActive    Boolean  @default(true)
-  order       Int      @default(0)
-  clicks      Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-
-  @@unique([profileId, order])
-  @@index([profileId, order])
-  @@map("links")
 }

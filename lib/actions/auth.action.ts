@@ -29,8 +29,7 @@ export const SignUp = async (
   email: string,
   password: string,
   name: string,
-  username: string,
-  displayName: string
+  username: string
 ) => {
   try {
     await auth.api.signUpEmail({
@@ -39,7 +38,6 @@ export const SignUp = async (
         password,
         name,
         username,
-        displayName,
       },
     });
 
