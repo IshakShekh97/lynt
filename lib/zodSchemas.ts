@@ -47,3 +47,31 @@ export const signUpSchema = z
   });
 
 export type SignUpFormValues = z.infer<typeof signUpSchema>;
+
+export const linkSchema = z.object({
+  title: z
+    .string()
+    .min(1, { message: "Title is required" })
+    .max(100, { message: "Title must not exceed 100 characters" }),
+  url: z
+    .string()
+    .min(1, { message: "URL is required" })
+    .url({ message: "Please enter a valid URL" }),
+  description: z
+    .string()
+    .max(200, { message: "Description must not exceed 200 characters" })
+    .optional(),
+  emoji: z.string().optional(),
+  thumbnail: z.string().optional(),
+  isActive: z.boolean(),
+});
+
+export type LinkFormValues = z.infer<typeof linkSchema>;
+
+// Schema for link reordering
+export const linkReorderSchema = z.object({
+  linkId: z.string().min(1, { message: "Link ID is required" }),
+  newOrder: z.number().min(0, { message: "Order must be a positive number" }),
+});
+
+export type LinkReorderValues = z.infer<typeof linkReorderSchema>;

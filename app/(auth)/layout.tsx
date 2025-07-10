@@ -1,7 +1,18 @@
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
+import { getSession } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import React from "react";
 
-const AuthLayout = ({ children }: { children: React.ReactNode }) => {
+const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
+  const session = await getSession({
+    headers: await headers(),
+  });
+
+  if (session) {
+    redirect("/dashboard");
+  }
+
   return (
     <div className="min-h-dvh flex items-center justify-center">
       {children}

@@ -179,3 +179,11 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+* {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  @apply bg-accent text-black;
+}
