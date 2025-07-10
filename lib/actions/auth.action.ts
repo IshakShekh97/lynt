@@ -47,7 +47,7 @@ export const SignUp = async (
     };
   } catch (error) {
     const e = error as Error;
-
+    console.log(e.name);
     return {
       success: false,
       message: e.message || "An unknown error occurred.",

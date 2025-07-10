@@ -187,3 +187,25 @@ body {
 ::selection {
   @apply bg-accent text-black;
 }
+
+/* Drag and Drop Styles */
+.drag-handle {
+  touch-action: none;
+}
+
+.drag-handle:hover {
+  @apply bg-muted;
+}
+
+.drag-handle:active {
+  @apply bg-muted-foreground/10;
+}
+
+/* Smooth transitions for draggable items */
+.draggable-item {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.draggable-item:hover {
+  @apply shadow-md;
+}

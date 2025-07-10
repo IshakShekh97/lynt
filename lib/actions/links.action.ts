@@ -363,3 +363,64 @@ export const reorderLinks = async (linkId: string, newOrder: number) => {
     };
   }
 };
+
+export const updateLinksOrder = async (
+  linkOrders: { id: string; order: number }[]
+) => {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session?.user?.id) {
+      return {
+        success: false,
+        message: "Unauthorized",
+        data: null,
+      };
+    }
+
+    // Verify all links belong to the user
+    const linkIds = linkOrders.map((item) => item.id);
+    const existingLinks = await prisma.link.findMany({
+      where: {
+        id: { in: linkIds },
+        userId: session.user.id,
+      },
+    });
+
+    if (existingLinks.length !== linkIds.length) {
+      return {
+        success: false,
+        message:
+          "Some links not found or you don't have permission to modify them",
+        data: null,
+      };
+    }
+
+    // Update all links in a transaction
+    await prisma.$transaction(
+      linkOrders.map(({ id, order }) =>
+        prisma.link.update({
+          where: { id },
+          data: { order },
+        })
+      )
+    );
+
+    revalidatePath("/dashboard");
+
+    return {
+      success: true,
+      message: "Links reordered successfully",
+      data: null,
+    };
+  } catch (error) {
+    console.error("Error updating links order:", error);
+    return {
+      success: false,
+      message: "Failed to update links order",
+      data: null,
+    };
+  }
+};

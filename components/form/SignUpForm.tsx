@@ -107,7 +107,7 @@ const SignUpForm = () => {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Username (Unique)</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="johndoe"

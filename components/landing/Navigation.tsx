@@ -5,7 +5,7 @@ import { Menu, X, User, LogOut, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { useSession, signOut } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -15,8 +15,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
 
 export default function Navigation() {
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session, isPending } = useSession();
   const router = useRouter();
@@ -49,13 +51,21 @@ export default function Navigation() {
               <>
                 <Link
                   href="/dashboard"
-                  className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className={cn(
+                    "text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                    pathname === "/dashboard" &&
+                      "!text-black bg-secondary border-b-4 border-r-4"
+                  )}
                 >
                   Dashboard
                 </Link>
                 <Link
                   href="/profile"
-                  className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className={cn(
+                    "text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                    pathname === "/profile" &&
+                      "!text-black bg-secondary border-b-4 border-r-4"
+                  )}
                 >
                   Profile
                 </Link>
