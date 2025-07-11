@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Menu, X, User, LogOut, Settings } from "lucide-react";
+import { Menu, X, User, LogOut, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { useSession, signOut } from "@/lib/auth-client";
@@ -158,12 +158,12 @@ export default function Navigation() {
                   </div>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => router.push("/dashboard")}>
-                    <User className="mr-2 h-4 w-4" />
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
                     Dashboard
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push("/settings")}>
-                    <Settings className="mr-2 h-4 w-4" />
-                    Settings
+                  <DropdownMenuItem onClick={() => router.push("/profile")}>
+                    <User className="mr-2 h-4 w-4" />
+                    Profile
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut}>
@@ -247,12 +247,12 @@ export default function Navigation() {
                       variant="ghost"
                       className="w-full justify-start text-left"
                       onClick={() => {
-                        router.push("/settings");
+                        router.push("/profile");
                         setIsMenuOpen(false);
                       }}
                     >
-                      <Settings className="mr-2 h-4 w-4" />
-                      Settings
+                      <User className="mr-2 h-4 w-4" />
+                      Profile
                     </Button>
                     <Button
                       variant="ghost"

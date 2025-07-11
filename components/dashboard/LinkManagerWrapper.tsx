@@ -1,9 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { LinkManager } from "@/components/dashboard/LinkManager";
-import { getLinks } from "@/lib/actions/links.action";
-import { Skeleton } from "@/components/ui/skeleton";
+import { EnhancedLinkManager } from "./EnhancedLinkManager";
+import { useRouter } from "next/navigation";
 
 interface Link {
   id: string;
@@ -19,36 +17,23 @@ interface Link {
   order: number;
 }
 
-export const LinkManagerWrapper = () => {
-  const [links, setLinks] = useState<Link[]>([]);
-  const [loading, setLoading] = useState(true);
+interface LinkManagerWrapperProps {
+  links: Link[];
+  userId: string;
+}
 
-  const fetchLinks = async () => {
-    try {
-      const result = await getLinks();
-      if (result.success && result.data) {
-        setLinks(result.data);
-      }
-    } catch (error) {
-      console.error("Error fetching links:", error);
-    } finally {
-      setLoading(false);
-    }
+export function LinkManagerWrapper({ links, userId }: LinkManagerWrapperProps) {
+  const router = useRouter();
+
+  const handleRefresh = () => {
+    router.refresh();
   };
 
-  useEffect(() => {
-    fetchLinks();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="space-y-3">
-        <Skeleton className="h-12 w-full" />
-        <Skeleton className="h-16 w-full" />
-        <Skeleton className="h-16 w-full" />
-      </div>
-    );
-  }
-
-  return <LinkManager links={links} onRefresh={fetchLinks} />;
-};
+  return (
+    <EnhancedLinkManager 
+      links={links} 
+      userId={userId}
+      onRefresh={handleRefresh}
+    />
+  );
+}

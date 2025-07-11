@@ -20,6 +20,7 @@ model User {
   accounts      Account[]
   socialLinks   SocialLink[]
   links         Link[] // Add this line
+  activities    ActivityLog[]
 
   @@unique([email])
   @@unique([username])
@@ -98,6 +99,24 @@ model Link {
   clicks      Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  activities  ActivityLog[]
 
   @@map("link")
+}
+
+model ActivityLog {
+  id          String      @id @default(cuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  linkId      String?
+  link        Link?       @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  action      String      // "created", "updated", "deleted", "clicked", "enabled", "disabled"
+  entity      String      // "link", "social_link", "user"
+  entityId    String?
+  details     String?     // JSON string for additional details
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime    @default(now())
+
+  @@map("activity_log")
 }

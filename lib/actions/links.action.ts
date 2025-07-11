@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { linkSchema, type LinkFormValues } from "@/lib/zodSchemas";
 import { revalidatePath } from "next/cache";
+import { logActivity } from "@/lib/activity-logger";
 
 export const getLinks = async () => {
   try {
@@ -81,6 +82,19 @@ export const createLink = async (data: LinkFormValues) => {
       },
     });
 
+    // Log the activity
+    await logActivity({
+      userId: session.user.id,
+      action: "created",
+      entity: "link",
+      entityId: link.id,
+      linkId: link.id,
+      details: {
+        title: link.title,
+        url: link.url,
+      },
+    });
+
     revalidatePath("/dashboard");
 
     return {
@@ -138,6 +152,20 @@ export const updateLink = async (linkId: string, data: LinkFormValues) => {
       data: validatedData,
     });
 
+    // Log the activity
+    await logActivity({
+      userId: session.user.id,
+      action: "updated",
+      entity: "link",
+      entityId: linkId,
+      linkId: linkId,
+      details: {
+        title: updatedLink.title,
+        url: updatedLink.url,
+        changes: validatedData,
+      },
+    });
+
     revalidatePath("/dashboard");
 
     return {
@@ -188,6 +216,18 @@ export const deleteLink = async (linkId: string) => {
     await prisma.link.delete({
       where: {
         id: linkId,
+      },
+    });
+
+    // Log the activity
+    await logActivity({
+      userId: session.user.id,
+      action: "deleted",
+      entity: "link",
+      entityId: linkId,
+      details: {
+        title: existingLink.title,
+        url: existingLink.url,
       },
     });
 
@@ -243,6 +283,19 @@ export const toggleLinkStatus = async (linkId: string, isActive: boolean) => {
         id: linkId,
       },
       data: {
+        isActive,
+      },
+    });
+
+    // Log the activity
+    await logActivity({
+      userId: session.user.id,
+      action: isActive ? "enabled" : "disabled",
+      entity: "link",
+      entityId: linkId,
+      linkId: linkId,
+      details: {
+        title: updatedLink.title,
         isActive,
       },
     });
