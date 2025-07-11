@@ -1,4 +1,6 @@
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
+import { FloatingGeometricShapes } from "@/components/landing/FloatingGeometricShapes";
+import { AuthAnimatedBackground } from "@/components/landing/AuthAnimatedBackground";
 import { getSession } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -14,9 +16,32 @@ const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <div className="min-h-dvh flex items-center justify-center">
-      {children}
-      <ThemeSwitcher className="fixed bottom-10 right-10" />
+    <div className="min-h-dvh relative overflow-hidden bg-gradient-to-br from-background via-background to-secondary/10">
+      {/* Brutal Grid Background */}
+      <div className="absolute inset-0 opacity-10">
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, currentColor 1px, transparent 1px),
+              linear-gradient(to bottom, currentColor 1px, transparent 1px)
+            `,
+            backgroundSize: "40px 40px",
+          }}
+        />
+      </div>
+
+      {/* Background Geometric Shapes */}
+      <FloatingGeometricShapes className="opacity-20" />
+
+      {/* Auth-specific Animated Background */}
+      <AuthAnimatedBackground className="opacity-30" />
+
+      <div className="relative z-10 flex items-center justify-center min-h-dvh p-4">
+        {children}
+      </div>
+
+      <ThemeSwitcher className="fixed bottom-10 right-10 z-20" />
     </div>
   );
 };
