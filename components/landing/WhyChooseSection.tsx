@@ -197,7 +197,7 @@ export const WhyChooseSection = () => {
                           feature.variant === "destructive"
                             ? "text-white"
                             : feature.variant === "warning"
-                            ? "text-black"
+                            ? "text-black dark:text-white"
                             : "text-foreground"
                         }`}
                         intensity="low"
@@ -211,7 +211,7 @@ export const WhyChooseSection = () => {
                           feature.variant === "destructive"
                             ? "text-white/90"
                             : feature.variant === "warning"
-                            ? "text-black/80"
+                            ? "text-black/80 dark:text-white/90"
                             : "text-muted-foreground"
                         }`}
                       >

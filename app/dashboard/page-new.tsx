@@ -263,7 +263,7 @@ const BrutalDashboardPage = async () => {
                 className="inline-block p-3 transform -rotate-1"
               >
                 <GlitchText
-                  className="text-lg font-black text-black uppercase"
+                  className="text-lg font-black text-black dark:text-white uppercase"
                   intensity="medium"
                   trigger="hover"
                 >
@@ -332,7 +332,7 @@ const BrutalDashboardPage = async () => {
                   className="inline-block p-3 transform -rotate-1"
                 >
                   <GlitchText
-                    className="text-lg font-black text-black uppercase"
+                    className="text-lg font-black text-black dark:text-white uppercase"
                     intensity="medium"
                     trigger="hover"
                   >
@@ -391,7 +391,7 @@ const BrutalDashboardPage = async () => {
               className="inline-block p-4 transform -rotate-1"
             >
               <GlitchText
-                className="text-lg font-black text-black uppercase"
+                className="text-lg font-black text-black dark:text-white uppercase"
                 intensity="high"
                 trigger="always"
               >

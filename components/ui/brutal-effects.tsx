@@ -147,7 +147,8 @@ export const BrutalBox = ({
   const variantStyles = {
     default: "bg-background border-foreground text-foreground",
     destructive: "bg-red-500 border-red-800 text-white",
-    warning: "bg-yellow-400 border-yellow-800 text-black",
+    warning:
+      "bg-yellow-400 border-yellow-800 text-black dark:bg-yellow-600 dark:text-white dark:border-yellow-400",
     success: "bg-green-500 border-green-800 text-white",
   };
 

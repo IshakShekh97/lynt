@@ -138,7 +138,7 @@ export const PricingSection = () => {
               className="inline-block p-6 transform rotate-1"
             >
               <GlitchText
-                className="text-4xl md:text-6xl font-black tracking-tight text-black"
+                className="text-4xl md:text-6xl font-black tracking-tight text-black dark:text-white"
                 intensity="high"
                 trigger="hover"
               >
@@ -232,7 +232,7 @@ export const PricingSection = () => {
                         plan.variant === "destructive"
                           ? "text-white"
                           : plan.variant === "warning"
-                          ? "text-black"
+                          ? "text-black dark:text-white"
                           : "text-foreground"
                       }`}
                       intensity="low"
@@ -246,7 +246,7 @@ export const PricingSection = () => {
                         plan.variant === "destructive"
                           ? "text-white/80"
                           : plan.variant === "warning"
-                          ? "text-black/80"
+                          ? "text-black/80 dark:text-white/90"
                           : "text-muted-foreground"
                       }`}
                     >
@@ -270,7 +270,7 @@ export const PricingSection = () => {
                           plan.variant === "destructive"
                             ? "text-white"
                             : plan.variant === "warning"
-                            ? "text-black"
+                            ? "text-black dark:text-white"
                             : "text-foreground"
                         }`}
                         intensity="medium"
@@ -283,7 +283,7 @@ export const PricingSection = () => {
                           plan.variant === "destructive"
                             ? "text-white/80"
                             : plan.variant === "warning"
-                            ? "text-black/80"
+                            ? "text-black/80 dark:text-white/90"
                             : "text-muted-foreground"
                         }`}
                       >
@@ -315,7 +315,7 @@ export const PricingSection = () => {
                             plan.variant === "destructive"
                               ? "text-white"
                               : plan.variant === "warning"
-                              ? "text-black"
+                              ? "text-black dark:text-white"
                               : "text-foreground"
                           } ${
                             !feature.included ? "line-through opacity-50" : ""
@@ -333,7 +333,7 @@ export const PricingSection = () => {
                       plan.variant === "destructive"
                         ? "text-white/80"
                         : plan.variant === "warning"
-                        ? "text-black/80"
+                        ? "text-black/80 dark:text-white/90"
                         : "text-muted-foreground"
                     }`}
                   >
@@ -377,13 +377,13 @@ export const PricingSection = () => {
             >
               <div className="space-y-3">
                 <GlitchText
-                  className="text-xl font-black text-black uppercase"
+                  className="text-xl font-black text-black dark:text-white uppercase"
                   intensity="medium"
                   trigger="hover"
                 >
                   ⚠️ WARNING: PRICES MAY CAUSE ADDICTION ⚠️
                 </GlitchText>
-                <p className="text-black/80 font-bold tracking-wide">
+                <p className="text-black/80 dark:text-white/90 font-bold tracking-wide">
                   ALL PLANS COME WITH GUARANTEED DIGITAL MAYHEM
                 </p>
               </div>

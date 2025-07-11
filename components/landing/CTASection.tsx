@@ -66,7 +66,7 @@ export const CTASection = () => {
                 variant="warning"
                 className="inline-block p-3 transform -rotate-2"
               >
-                <span className="text-sm font-black tracking-widest uppercase text-black">
+                <span className="text-sm font-black tracking-widest uppercase text-black dark:text-white">
                   ⚠️ FINAL WARNING ⚠️
                 </span>
               </BrutalBox>
@@ -113,7 +113,7 @@ export const CTASection = () => {
               >
                 <Button
                   size="lg"
-                  className="px-12 py-6 text-xl font-black uppercase tracking-wider bg-yellow-400 text-black border-4 border-black hover:bg-yellow-300 hover:scale-110 transition-all duration-200"
+                  className="px-12 py-6 text-xl font-black uppercase tracking-wider bg-yellow-400 text-black border-4 border-black hover:bg-yellow-300 hover:scale-110 transition-all duration-200 dark:bg-yellow-600 dark:text-white dark:border-white dark:hover:bg-yellow-500"
                 >
                   💀 START DESTROYING 💀
                 </Button>

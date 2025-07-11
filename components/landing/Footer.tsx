@@ -96,7 +96,7 @@ export const Footer = () => {
               className="inline-block p-3 transform -rotate-1"
             >
               <GlitchText
-                className="text-lg font-black text-black uppercase"
+                className="text-lg font-black text-black dark:text-white uppercase"
                 intensity="medium"
                 trigger="hover"
               >
@@ -176,7 +176,7 @@ export const Footer = () => {
                 </p>
                 <ShakeElement intensity="medium" trigger="hover">
                   <BrutalBox variant="warning" className="inline-block p-2">
-                    <span className="text-xs font-black text-black tracking-wider">
+                    <span className="text-xs font-black text-black dark:text-white tracking-wider">
                       💻 BUILDING THE FUTURE
                     </span>
                   </BrutalBox>
@@ -217,7 +217,7 @@ export const Footer = () => {
 
             <ShakeElement intensity="high" trigger="hover">
               <BrutalBox variant="warning" className="p-3">
-                <span className="text-sm font-black text-black tracking-wider uppercase">
+                <span className="text-sm font-black text-black dark:text-white tracking-wider uppercase">
                   ⚠️ HANDLE WITH CARE ⚠️
                 </span>
               </BrutalBox>

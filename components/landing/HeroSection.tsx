@@ -81,7 +81,7 @@ export const HeroSection = () => {
           <motion.div variants={brutalSlideIn} className="space-y-6">
             <ShakeElement intensity="low" trigger="hover">
               <BrutalBox variant="warning" className="inline-block p-2">
-                <Badge className="text-xs px-4 py-2 font-black tracking-wider border-2 border-black bg-yellow-400 text-black hover:bg-yellow-300 transition-colors duration-200">
+                <Badge className="text-xs px-4 py-2 font-black tracking-wider border-2 border-black bg-yellow-400 text-black hover:bg-yellow-300 transition-colors duration-200 dark:bg-yellow-600 dark:text-white dark:border-white dark:hover:bg-yellow-500">
                   ⚡ THE MOST BRUTAL LINK DESTROYER ⚡
                 </Badge>
               </BrutalBox>
@@ -156,7 +156,7 @@ export const HeroSection = () => {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="px-8 py-4 text-lg font-black uppercase tracking-wide border-4 border-black bg-yellow-400 text-black hover:bg-yellow-300 transform hover:scale-105 transition-all duration-200"
+                  className="px-8 py-4 text-lg font-black uppercase tracking-wide border-4 border-black bg-yellow-400 text-black hover:bg-yellow-300 transform hover:scale-105 transition-all duration-200 dark:bg-yellow-600 dark:text-white dark:border-white dark:hover:bg-yellow-500"
                 >
                   🔥 SEE THE CHAOS 🔥
                 </Button>

@@ -104,7 +104,7 @@ export const TestimonialsSection = () => {
                 className="inline-block p-4 mb-8 transform -rotate-2"
               >
                 <GlitchText
-                  className="text-sm font-black tracking-widest uppercase text-black"
+                  className="text-sm font-black tracking-widest uppercase text-black dark:text-white"
                   intensity="high"
                   trigger="hover"
                 >
@@ -195,7 +195,7 @@ export const TestimonialsSection = () => {
                     <div className="flex items-center gap-1 mb-4">
                       {[...Array(testimonial.rating)].map((_, i) => (
                         <BrutalBox key={i} variant="warning" className="p-1">
-                          <Star className="h-3 w-3 text-black fill-black" />
+                          <Star className="h-3 w-3 text-black fill-black dark:text-white dark:fill-white" />
                         </BrutalBox>
                       ))}
                     </div>
@@ -206,7 +206,7 @@ export const TestimonialsSection = () => {
                         testimonial.variant === "destructive"
                           ? "text-white"
                           : testimonial.variant === "warning"
-                          ? "text-black"
+                          ? "text-black dark:text-white"
                           : "text-foreground"
                       }`}
                       intensity="low"
@@ -235,7 +235,7 @@ export const TestimonialsSection = () => {
                             testimonial.variant === "destructive"
                               ? "text-white"
                               : testimonial.variant === "warning"
-                              ? "text-black"
+                              ? "text-black dark:text-white"
                               : "text-foreground"
                           }`}
                           intensity="medium"
@@ -248,7 +248,7 @@ export const TestimonialsSection = () => {
                             testimonial.variant === "destructive"
                               ? "text-white/80"
                               : testimonial.variant === "warning"
-                              ? "text-black/80"
+                              ? "text-black/80 dark:text-white/90"
                               : "text-muted-foreground"
                           }`}
                         >
@@ -283,7 +283,9 @@ export const TestimonialsSection = () => {
                   >
                     <GlitchText
                       className={`text-3xl font-black mb-2 ${
-                        index === 1 ? "text-black" : "text-white"
+                        index === 1
+                          ? "text-black dark:text-white"
+                          : "text-white"
                       }`}
                       intensity="high"
                       trigger="hover"
@@ -292,7 +294,9 @@ export const TestimonialsSection = () => {
                     </GlitchText>
                     <p
                       className={`text-xs font-bold tracking-widest uppercase ${
-                        index === 1 ? "text-black/80" : "text-white/80"
+                        index === 1
+                          ? "text-black/80 dark:text-white/90"
+                          : "text-white/80"
                       }`}
                     >
                       {stat.label}
@@ -316,7 +320,7 @@ export const TestimonialsSection = () => {
               className="inline-block p-4 transform -rotate-2"
             >
               <GlitchText
-                className="text-lg font-black text-black uppercase"
+                className="text-lg font-black text-black dark:text-white uppercase"
                 intensity="high"
                 trigger="always"
               >
