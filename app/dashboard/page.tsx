@@ -15,10 +15,10 @@ import { getSession } from "@/lib/auth";
 import { getLinks } from "@/lib/actions/links.action";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { 
-  DashboardLoadingSkeleton, 
-  LinkManagementSkeleton, 
-  AnalyticsSkeleton 
+import {
+  DashboardLoadingSkeleton,
+  LinkManagementSkeleton,
+  AnalyticsSkeleton,
 } from "@/components/loading-skeletons";
 
 async function DashboardStats() {
@@ -40,49 +40,49 @@ async function DashboardStats() {
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Links</CardTitle>
+          <CardTitle className="text-sm font-medium">Link Arsenal</CardTitle>
           <Link className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{totalLinks}</div>
           <p className="text-xs text-muted-foreground">
-            {totalLinks === 0 ? "No links created yet" : "Links created"}
-          </p>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Clicks</CardTitle>
-          <BarChart3 className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{totalClicks}</div>
-          <p className="text-xs text-muted-foreground">
-            {totalClicks === 0
-              ? "No clicks recorded"
-              : "Total clicks received"}
-          </p>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Active Links</CardTitle>
-          <Link className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{activeLinks}</div>
-          <p className="text-xs text-muted-foreground">
-            {activeLinks === totalLinks
-              ? "All links are active"
-              : `${activeLinks} of ${totalLinks} active`}
+            {totalLinks === 0 ? "No weapons forged yet" : "Weapons forged"}
           </p>
         </CardContent>
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
-            Unique Visitors
+            Total Destruction
           </CardTitle>
+          <BarChart3 className="h-4 w-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{totalClicks}</div>
+          <p className="text-xs text-muted-foreground">
+            {totalClicks === 0
+              ? "No carnage recorded"
+              : "Total devastation dealt"}
+          </p>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Live Weapons</CardTitle>
+          <Link className="h-4 w-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{activeLinks}</div>
+          <p className="text-xs text-muted-foreground">
+            {activeLinks === totalLinks
+              ? "All weapons are loaded"
+              : `${activeLinks} of ${totalLinks} armed`}
+          </p>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Victims Count</CardTitle>
           <Users className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
@@ -106,12 +106,7 @@ async function LinkManagerTab() {
   const linksResult = await getLinks();
   const links = linksResult.success ? linksResult.data || [] : [];
 
-  return (
-    <LinkManagerWrapper 
-      links={links} 
-      userId={session.user.id}
-    />
-  );
+  return <LinkManagerWrapper links={links} userId={session.user.id} />;
 }
 
 const DashboardPage = async () => {
@@ -124,12 +119,14 @@ const DashboardPage = async () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8 p-4 sm:p-6 lg:p-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            Command Center
+          </h1>
           <p className="text-muted-foreground">
-            Welcome back! Here&apos;s an overview of your account.
+            Welcome back! Here&apos;s your digital arsenal overview.
           </p>
         </div>
       </div>
@@ -140,27 +137,39 @@ const DashboardPage = async () => {
 
       <Tabs defaultValue="links" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="links" className="flex items-center space-x-2">
+          <TabsTrigger
+            value="links"
+            className="flex items-center justify-center space-x-1 sm:space-x-2"
+          >
             <Link className="h-4 w-4" />
-            <span>Manage Links</span>
+            <span className="hidden sm:inline">Link Factory</span>
+            <span className="sm:hidden">Links</span>
           </TabsTrigger>
-          <TabsTrigger value="analytics" className="flex items-center space-x-2">
+          <TabsTrigger
+            value="analytics"
+            className="flex items-center justify-center space-x-1 sm:space-x-2"
+          >
             <BarChart3 className="h-4 w-4" />
-            <span>Analytics & Activity</span>
+            <span className="hidden sm:inline">Damage Reports</span>
+            <span className="sm:hidden">Reports</span>
           </TabsTrigger>
-          <TabsTrigger value="social" className="flex items-center space-x-2">
+          <TabsTrigger
+            value="social"
+            className="flex items-center justify-center space-x-1 sm:space-x-2"
+          >
             <Activity className="h-4 w-4" />
-            <span>Social Links</span>
+            <span className="hidden sm:inline">Social Brutts</span>
+            <span className="sm:hidden">Social</span>
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="links" className="space-y-4">
+        <TabsContent value="links" className="space-y-4 overflow-hidden">
           <Suspense fallback={<LinkManagementSkeleton />}>
             <LinkManagerTab />
           </Suspense>
         </TabsContent>
 
-        <TabsContent value="analytics" className="space-y-4">
+        <TabsContent value="analytics" className="space-y-4 overflow-hidden">
           <Suspense fallback={<AnalyticsSkeleton />}>
             <Analytics />
           </Suspense>
@@ -169,9 +178,11 @@ const DashboardPage = async () => {
         <TabsContent value="social" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Social Links</CardTitle>
+              <CardTitle className="text-3xl font-bold">
+                Social Brutees
+              </CardTitle>
               <CardDescription>
-                Manage your social media links and profiles
+                Manage your social media links and control their visibility
               </CardDescription>
             </CardHeader>
             <CardContent>

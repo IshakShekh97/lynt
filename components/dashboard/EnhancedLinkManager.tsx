@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import {
   AlertDialog,
@@ -14,7 +13,15 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { LinkForm } from "@/components/form/LinkForm";
-import { Plus, Edit, Trash2, MoreHorizontal, GripVertical, ExternalLink, BarChart3 } from "lucide-react";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  MoreHorizontal,
+  GripVertical,
+  ExternalLink,
+  BarChart3,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,7 +29,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { deleteLink, updateLinksOrder } from "@/lib/actions/links.action";
-import { logActivity } from "@/lib/activity-logger";
+import { logUserActivity } from "@/lib/actions/activity.action";
 import { trackLinkClick } from "@/lib/click-tracker";
 import { toast } from "sonner";
 import {
@@ -66,31 +73,29 @@ export const EnhancedLinkManager: React.FC<EnhancedLinkManagerProps> = ({
 
   const handleCreateSuccess = async () => {
     setIsCreateDialogOpen(false);
-    
+
     // Log the creation activity
-    await logActivity({
-      userId,
+    await logUserActivity({
       action: "created",
       entity: "link",
     });
-    
+
     onRefresh?.();
   };
 
   const handleEditSuccess = async () => {
     setIsEditDialogOpen(false);
-    
+
     // Log the update activity
     if (selectedLink) {
-      await logActivity({
-        userId,
+      await logUserActivity({
         action: "updated",
         entity: "link",
         entityId: selectedLink.id,
         linkId: selectedLink.id,
       });
     }
-    
+
     setSelectedLink(null);
     onRefresh?.();
   };
@@ -114,8 +119,7 @@ export const EnhancedLinkManager: React.FC<EnhancedLinkManagerProps> = ({
 
       if (result.success) {
         // Log the deletion activity
-        await logActivity({
-          userId,
+        await logUserActivity({
           action: "deleted",
           entity: "link",
           entityId: selectedLink.id,
@@ -166,8 +170,7 @@ export const EnhancedLinkManager: React.FC<EnhancedLinkManagerProps> = ({
 
       if (updateResult.success) {
         // Log the reorder activity
-        await logActivity({
-          userId,
+        await logUserActivity({
           action: "reordered",
           entity: "links",
           details: {
@@ -201,9 +204,9 @@ export const EnhancedLinkManager: React.FC<EnhancedLinkManagerProps> = ({
   const handleLinkClick = async (link: Link) => {
     // Track the click
     await trackLinkClick(link.id, userId);
-    
+
     // Open the link in a new tab
-    window.open(link.url, '_blank');
+    window.open(link.url, "_blank");
   };
 
   const sortedLinks = [...links].sort((a, b) => a.order - b.order);
@@ -212,9 +215,9 @@ export const EnhancedLinkManager: React.FC<EnhancedLinkManagerProps> = ({
     <Card>
       <CardHeader>
         <CardTitle className="text-lg flex items-center justify-between">
-          Manage Links
+          Weapon Arsenal
           <Badge variant="secondary" className="ml-2">
-            {links.length} links
+            {links.length} weapons
           </Badge>
         </CardTitle>
       </CardHeader>
@@ -229,14 +232,15 @@ export const EnhancedLinkManager: React.FC<EnhancedLinkManagerProps> = ({
               <AlertDialogTrigger asChild>
                 <Button className="w-full" disabled={isReordering}>
                   <Plus className="mr-2 h-4 w-4" />
-                  Add New Link
+                  Forge New Weapon
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent className="max-w-md">
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Create New Link</AlertDialogTitle>
+                  <AlertDialogTitle>Forge New Weapon</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Add a new link to your profile. Fill in the details below.
+                    Add a new deadly link to your arsenal. Fill in the
+                    destruction details below.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <LinkForm
@@ -255,140 +259,183 @@ export const EnhancedLinkManager: React.FC<EnhancedLinkManagerProps> = ({
                 </div>
               </div>
             )}
-            
-            <ScrollArea className="h-96">
-              <Droppable droppableId="links-list">
-                {(provided, snapshot) => (
-                  <div
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    className={`space-y-3 transition-all duration-200 ${
-                      snapshot.isDraggingOver
-                        ? "bg-muted/30 rounded-lg p-2 border-2 border-dashed border-primary/50"
-                        : ""
-                    }`}
-                  >
-                    {sortedLinks.length === 0 ? (
-                      <div className="text-center py-8 text-muted-foreground">
-                        <Plus className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                        <p className="text-lg font-medium">No links yet</p>
-                        <p className="text-sm">
-                          Click the button above to add your first link
-                        </p>
-                      </div>
-                    ) : (
-                      sortedLinks.map((link, index) => (
-                        <Draggable key={link.id} draggableId={link.id} index={index}>
-                          {(provided, snapshot) => (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              className={`flex items-center justify-between p-4 border rounded-lg bg-background transition-all duration-200 ${
-                                snapshot.isDragging
-                                  ? "shadow-lg border-primary/50 bg-background/95 scale-105"
-                                  : "hover:shadow-md"
-                              } ${
-                                isReordering ? "opacity-50 pointer-events-none" : ""
-                              }`}
-                            >
-                              <div className="flex items-center space-x-3 flex-1">
-                                <div
-                                  {...provided.dragHandleProps}
-                                  className="cursor-grab active:cursor-grabbing hover:bg-muted rounded p-1 transition-colors"
-                                >
-                                  <GripVertical className="h-4 w-4 text-muted-foreground" />
+
+            <Droppable droppableId="links-list">
+              {(provided, snapshot) => (
+                <div
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  className={`space-y-4 transition-all duration-300 ${
+                    snapshot.isDraggingOver
+                      ? "bg-primary/5 rounded-xl p-4 border-2 border-dashed border-primary/30"
+                      : ""
+                  }`}
+                >
+                  {sortedLinks.length === 0 ? (
+                    <div className="text-center py-12 text-muted-foreground bg-muted/20 rounded-xl border-2 border-dashed border-muted-foreground/20">
+                      <Plus className="h-16 w-16 mx-auto mb-4 opacity-40 text-primary" />
+                      <p className="text-xl font-semibold mb-2">
+                        No weapons forged yet
+                      </p>
+                      <p className="text-sm max-w-md mx-auto">
+                        Your arsenal is empty. Click the &quot;Forge New
+                        Weapon&quot; button above to create your first deadly
+                        link.
+                      </p>
+                    </div>
+                  ) : (
+                    sortedLinks.map((link, index) => (
+                      <Draggable
+                        key={link.id}
+                        draggableId={link.id}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            className={`group flex items-start sm:items-center justify-between p-4 sm:p-6 border rounded-xl bg-background/50 backdrop-blur-sm transition-all duration-300 hover:bg-background/80 ${
+                              snapshot.isDragging
+                                ? "shadow-2xl border-primary/60 bg-background/95 scale-[1.02] rotate-1"
+                                : "hover:shadow-lg hover:border-primary/30 hover:-translate-y-1"
+                            } ${
+                              isReordering
+                                ? "opacity-50 pointer-events-none"
+                                : ""
+                            } ${
+                              link.isActive
+                                ? "border-green-200/50 dark:border-green-800/50"
+                                : "border-gray-200/50 dark:border-gray-700/50"
+                            }`}
+                          >
+                            <div className="flex items-start sm:items-center space-x-3 sm:space-x-4 flex-1 min-w-0">
+                              <div
+                                {...provided.dragHandleProps}
+                                className="cursor-grab active:cursor-grabbing hover:bg-muted/80 rounded-lg p-2 transition-all duration-200 flex-shrink-0 mt-1 sm:mt-0 group-hover:bg-primary/10"
+                              >
+                                <GripVertical className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                              </div>
+
+                              {link.emoji && (
+                                <div className="text-2xl sm:text-3xl flex-shrink-0 animate-pulse">
+                                  {link.emoji}
                                 </div>
-                                
-                                {link.emoji && (
-                                  <div className="text-xl">{link.emoji}</div>
-                                )}
-                                
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-center space-x-2 mb-1">
-                                    <h3 className="font-medium truncate">{link.title}</h3>
-                                    {!link.isActive && (
-                                      <Badge variant="secondary" className="text-xs">
-                                        Disabled
-                                      </Badge>
-                                    )}
-                                  </div>
-                                  
-                                  <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-                                    <ExternalLink className="h-3 w-3" />
-                                    <button
-                                      onClick={() => handleLinkClick(link)}
-                                      className="truncate hover:text-primary hover:underline transition-colors"
+                              )}
+
+                              <div className="flex-1 min-w-0 space-y-2">
+                                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 gap-2 sm:gap-0">
+                                  <h3 className="font-semibold text-lg truncate text-foreground group-hover:text-primary transition-colors">
+                                    {link.title}
+                                  </h3>
+                                  {!link.isActive && (
+                                    <Badge
+                                      variant="destructive"
+                                      className="text-xs w-fit px-2 py-1 font-medium"
                                     >
-                                      {formatUrl(link.url)}
-                                    </button>
-                                  </div>
-                                  
-                                  {link.description && (
-                                    <p className="text-xs text-muted-foreground mt-1 truncate">
-                                      {link.description}
-                                    </p>
+                                      ⚠️ Disabled
+                                    </Badge>
                                   )}
-                                  
-                                  <div className="flex items-center space-x-4 mt-2">
-                                    <div className="flex items-center space-x-1">
-                                      <BarChart3 className="h-3 w-3 text-muted-foreground" />
-                                      <span className="text-xs text-muted-foreground">
-                                        {link.clicks} clicks
+                                  {link.isActive && (
+                                    <Badge
+                                      variant="default"
+                                      className="text-xs w-fit px-2 py-1 font-medium bg-green-500 hover:bg-green-600"
+                                    >
+                                      ✅ Active
+                                    </Badge>
+                                  )}
+                                </div>
+
+                                <div className="flex items-center space-x-2 text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+                                  <ExternalLink className="h-4 w-4 flex-shrink-0" />
+                                  <button
+                                    onClick={() => handleLinkClick(link)}
+                                    className="truncate hover:text-primary hover:underline transition-all duration-200 min-w-0 font-medium"
+                                  >
+                                    {formatUrl(link.url)}
+                                  </button>
+                                </div>
+
+                                {link.description && (
+                                  <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors leading-relaxed bg-muted/30 rounded-lg px-3 py-2">
+                                    {link.description}
+                                  </p>
+                                )}
+
+                                <div className="flex items-center justify-between pt-2">
+                                  <div className="flex items-center space-x-4">
+                                    <div className="flex items-center space-x-2 bg-muted/50 rounded-full px-3 py-1">
+                                      <BarChart3 className="h-4 w-4 text-blue-500" />
+                                      <span className="text-sm font-medium text-foreground">
+                                        {link.clicks} kills
                                       </span>
                                     </div>
-                                    <div
-                                      className={`w-2 h-2 rounded-full ${
-                                        link.isActive ? "bg-green-500" : "bg-gray-400"
-                                      }`}
-                                    />
+                                    <div className="flex items-center space-x-2">
+                                      <div
+                                        className={`w-3 h-3 rounded-full shadow-sm ${
+                                          link.isActive
+                                            ? "bg-green-500 animate-pulse"
+                                            : "bg-gray-400"
+                                        }`}
+                                      />
+                                      <span className="text-xs text-muted-foreground font-medium">
+                                        {link.isActive ? "Live" : "Offline"}
+                                      </span>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                              
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    disabled={isReordering}
-                                  >
-                                    <MoreHorizontal className="h-4 w-4" />
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                  <DropdownMenuItem
-                                    onClick={() => handleEdit(link)}
-                                  >
-                                    <Edit className="mr-2 h-4 w-4" />
-                                    Edit
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem
-                                    onClick={() => handleDeleteClick(link)}
-                                    className="text-red-600 focus:text-red-600"
-                                  >
-                                    <Trash2 className="mr-2 h-4 w-4" />
-                                    Delete
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
                             </div>
-                          )}
-                        </Draggable>
-                      ))
-                    )}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </ScrollArea>
+
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  disabled={isReordering}
+                                  className="flex-shrink-0 h-10 w-10 rounded-full hover:bg-primary/10 group-hover:bg-primary/20 transition-all duration-200"
+                                >
+                                  <MoreHorizontal className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent className="w-48">
+                                <DropdownMenuItem
+                                  onClick={() => handleEdit(link)}
+                                  className="hover:bg-blue-50 dark:hover:bg-blue-950 transition-colors"
+                                >
+                                  <Edit className="mr-3 h-4 w-4 text-blue-500" />
+                                  <span className="font-medium">
+                                    Modify Weapon
+                                  </span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => handleDeleteClick(link)}
+                                  className="text-red-600 focus:text-red-600 hover:bg-red-50 dark:hover:bg-red-950 transition-colors"
+                                >
+                                  <Trash2 className="mr-3 h-4 w-4 text-red-500" />
+                                  <span className="font-medium">Destroy</span>
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))
+                  )}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
 
             {/* Edit Link Dialog */}
-            <AlertDialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+            <AlertDialog
+              open={isEditDialogOpen}
+              onOpenChange={setIsEditDialogOpen}
+            >
               <AlertDialogContent className="max-w-md">
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Edit Link</AlertDialogTitle>
+                  <AlertDialogTitle>Modify Weapon</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Update your link details below.
+                    Update your weapon&apos;s destruction potential below.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 {selectedLink && (
@@ -418,10 +465,11 @@ export const EnhancedLinkManager: React.FC<EnhancedLinkManagerProps> = ({
             >
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Delete Link</AlertDialogTitle>
+                  <AlertDialogTitle>Destroy Weapon</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Are you sure you want to delete &quot;{selectedLink?.title}
-                    &quot;? This action cannot be undone.
+                    Are you sure you want to obliterate &quot;
+                    {selectedLink?.title}
+                    &quot;? This nuclear action cannot be undone.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <div className="flex justify-end space-x-2">

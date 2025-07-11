@@ -214,92 +214,82 @@ export default function SocialLinksSection() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-3xl font-bold">Social Brutees</CardTitle>
-        <CardDescription>
-          Manage your social media links and control their visibility
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {socialPlatforms.map((platform) => {
-          const linkData = getSocialLinkData(platform.name);
-          const isActive = linkData?.isActive ?? true;
-          const url = linkData?.url ?? "";
-          const isSaving = savingStates[platform.name] || false;
+    <div className="space-y-6">
+      {socialPlatforms.map((platform) => {
+        const linkData = getSocialLinkData(platform.name);
+        const isActive = linkData?.isActive ?? true;
+        const url = linkData?.url ?? "";
+        const isSaving = savingStates[platform.name] || false;
 
-          return (
-            <div key={platform.name} className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  {platform.icon}
-                  <Label className="text-sm font-medium">
-                    {platform.label}
-                  </Label>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Switch
-                    checked={isActive}
-                    onCheckedChange={() => handleToggleActive(platform.name)}
-                    disabled={!url.trim()}
-                  />
-                  <Label className="text-xs text-muted-foreground">
-                    {isActive ? "Active" : "Inactive"}
-                  </Label>
-                </div>
+        return (
+          <div key={platform.name} className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                {platform.icon}
+                <Label className="text-sm font-medium">{platform.label}</Label>
               </div>
+              <div className="flex items-center gap-2">
+                <Switch
+                  checked={isActive}
+                  onCheckedChange={() => handleToggleActive(platform.name)}
+                  disabled={!url.trim()}
+                />
+                <Label className="text-xs text-muted-foreground">
+                  {isActive ? "Active" : "Inactive"}
+                </Label>
+              </div>
+            </div>
 
-              <div className="flex gap-2">
-                <div className="flex-1 relative">
-                  <Input
-                    placeholder={`Enter your ${platform.label} URL`}
-                    value={url}
-                    onChange={(e) =>
-                      handleUrlChange(platform.name, e.target.value)
-                    }
-                    className="pr-10"
-                  />
-                  {url && (
-                    <Link className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  )}
-                </div>
-
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => handleSave(platform.name)}
-                  disabled={!url.trim() || isSaving}
-                  className="shrink-0"
-                >
-                  {isSaving ? (
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                  ) : (
-                    <Save className="h-4 w-4" />
-                  )}
-                </Button>
-
+            <div className="flex gap-2">
+              <div className="flex-1 relative">
+                <Input
+                  placeholder={`Enter your ${platform.label} URL`}
+                  value={url}
+                  onChange={(e) =>
+                    handleUrlChange(platform.name, e.target.value)
+                  }
+                  className="pr-10"
+                />
                 {url && (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleDelete(platform.name)}
-                    className="shrink-0 text-destructive hover:text-destructive"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <Link className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 )}
               </div>
 
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => handleSave(platform.name)}
+                disabled={!url.trim() || isSaving}
+                className="shrink-0"
+              >
+                {isSaving ? (
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                ) : (
+                  <Save className="h-4 w-4" />
+                )}
+              </Button>
+
               {url && (
-                <p className="text-xs text-muted-foreground">
-                  Preview: {platform.baseUrl}
-                  {url}
-                </p>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => handleDelete(platform.name)}
+                  className="shrink-0 text-destructive hover:text-destructive"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               )}
             </div>
-          );
-        })}
-      </CardContent>
-    </Card>
+
+            {url && (
+              <p className="text-xs text-muted-foreground">
+                Preview: {platform.baseUrl}
+                {url}
+              </p>
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
 }

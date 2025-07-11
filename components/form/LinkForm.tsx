@@ -86,10 +86,10 @@ export const LinkForm: React.FC<LinkFormProps> = ({
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Title <span className="text-red-500">*</span>
+                Weapon Name <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
-                <Input placeholder="Enter link title" {...field} />
+                <Input placeholder="Enter weapon designation" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -102,12 +102,12 @@ export const LinkForm: React.FC<LinkFormProps> = ({
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                URL <span className="text-red-500">*</span>
+                Target URL <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   type="url"
-                  placeholder="https://example.com"
+                  placeholder="https://target-destruction.com"
                   {...field}
                 />
               </FormControl>
@@ -121,10 +121,10 @@ export const LinkForm: React.FC<LinkFormProps> = ({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Description</FormLabel>
+              <FormLabel>Destruction Notes</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Optional description for your link"
+                  placeholder="Optional battle details for your weapon"
                   {...field}
                 />
               </FormControl>
@@ -138,7 +138,7 @@ export const LinkForm: React.FC<LinkFormProps> = ({
           name="emoji"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Emoji</FormLabel>
+              <FormLabel>War Symbol</FormLabel>
               <FormControl>
                 <div className="flex items-center gap-2">
                   <EmojiPickerComponent
@@ -174,7 +174,7 @@ export const LinkForm: React.FC<LinkFormProps> = ({
                   onCheckedChange={field.onChange}
                 />
               </FormControl>
-              <FormLabel>Active</FormLabel>
+              <FormLabel>Armed & Ready</FormLabel>
             </FormItem>
           )}
         />
@@ -190,7 +190,7 @@ export const LinkForm: React.FC<LinkFormProps> = ({
           </Button>
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {editingLink ? "Update Link" : "Create Link"}
+            {editingLink ? "Upgrade Weapon" : "Deploy Weapon"}
           </Button>
         </div>
       </form>

@@ -30,8 +30,8 @@ export function LinkManagerWrapper({ links, userId }: LinkManagerWrapperProps) {
   };
 
   return (
-    <EnhancedLinkManager 
-      links={links} 
+    <EnhancedLinkManager
+      links={links}
       userId={userId}
       onRefresh={handleRefresh}
     />

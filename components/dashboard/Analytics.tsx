@@ -62,17 +62,21 @@ export default async function Analytics() {
   return (
     <div className="space-y-6">
       {/* Analytics Overview */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Clicks This Week</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Weekly Carnage
+            </CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{analyticsData.clicksThisWeek}</div>
+            <div className="text-2xl font-bold">
+              {analyticsData.clicksThisWeek}
+            </div>
             <p className="text-xs text-muted-foreground">
-              {analyticsData.clicksThisWeek > analyticsData.clicksThisMonth / 4 
-                ? "Above average" 
+              {analyticsData.clicksThisWeek > analyticsData.clicksThisMonth / 4
+                ? "Above average"
                 : "Below average"}
             </p>
           </CardContent>
@@ -80,67 +84,87 @@ export default async function Analytics() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Clicks This Month</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Monthly Massacre
+            </CardTitle>
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{analyticsData.clicksThisMonth}</div>
-            <p className="text-xs text-muted-foreground">
-              Monthly performance
-            </p>
+            <div className="text-2xl font-bold">
+              {analyticsData.clicksThisMonth}
+            </div>
+            <p className="text-xs text-muted-foreground">Monthly performance</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Recent Activities</CardTitle>
+            <CardTitle className="text-sm font-medium">Recent Chaos</CardTitle>
             <Eye className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{analyticsData.recentActivities}</div>
+            <div className="text-2xl font-bold">
+              {analyticsData.recentActivities}
+            </div>
             <p className="text-xs text-muted-foreground">
-              Total activities logged
+              Total destruction logged
             </p>
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
         {/* Top Performing Links */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Top Performing Links</CardTitle>
+            <CardTitle className="text-lg">Top Performing Killers</CardTitle>
           </CardHeader>
           <CardContent>
             <ScrollArea className="h-80">
               {analyticsData.topLinks.length > 0 ? (
                 <div className="space-y-4">
                   {analyticsData.topLinks.map((link, index) => (
-                    <div key={link.id} className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <Badge variant="secondary" className="w-8 h-8 rounded-full flex items-center justify-center p-0">
+                    <div
+                      key={link.id}
+                      className="flex items-center justify-between gap-2"
+                    >
+                      <div className="flex items-center space-x-2 min-w-0 flex-1">
+                        <Badge
+                          variant="secondary"
+                          className="w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center p-0 flex-shrink-0"
+                        >
                           {index + 1}
                         </Badge>
-                        <div className="space-y-1">
+                        <div className="space-y-1 min-w-0 flex-1">
                           <div className="flex items-center space-x-2">
-                            {link.emoji && <span>{link.emoji}</span>}
-                            <p className="text-sm font-medium leading-none">{link.title}</p>
+                            {link.emoji && (
+                              <span className="flex-shrink-0">
+                                {link.emoji}
+                              </span>
+                            )}
+                            <p className="text-sm font-medium leading-none truncate">
+                              {link.title}
+                            </p>
                           </div>
-                          <p className="text-xs text-muted-foreground truncate max-w-48">
+                          <p className="text-xs text-muted-foreground truncate">
                             {link.url}
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <Badge variant="outline">{link.clicks} clicks</Badge>
-                        <ExternalLink className="h-3 w-3 text-muted-foreground" />
+                      <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+                        <Badge variant="outline" className="text-xs">
+                          {link.clicks} kills
+                        </Badge>
+                        <ExternalLink className="h-3 w-3 text-muted-foreground hidden sm:block" />
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <p className="text-sm text-muted-foreground">No links with clicks yet</p>
+                  <p className="text-sm text-muted-foreground">
+                    No deadly weapons yet
+                  </p>
                 </div>
               )}
             </ScrollArea>
@@ -152,7 +176,7 @@ export default async function Analytics() {
           <CardHeader>
             <CardTitle className="text-lg flex items-center space-x-2">
               <Clock className="h-5 w-5" />
-              <span>Recent Activity</span>
+              <span>Battle Log</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -160,8 +184,13 @@ export default async function Analytics() {
               {activityLogs.length > 0 ? (
                 <div className="space-y-4">
                   {activityLogs.map((activity) => (
-                    <div key={activity.id} className="flex items-start space-x-3">
-                      <div className="text-lg">{getActionIcon(activity.action)}</div>
+                    <div
+                      key={activity.id}
+                      className="flex items-start space-x-3"
+                    >
+                      <div className="text-lg">
+                        {getActionIcon(activity.action)}
+                      </div>
                       <div className="space-y-1 flex-1">
                         <p className="text-sm font-medium leading-none">
                           {formatActionText(activity.action, activity.entity)}
@@ -172,7 +201,9 @@ export default async function Analytics() {
                           </p>
                         )}
                         <p className="text-xs text-muted-foreground">
-                          {formatDistanceToNow(new Date(activity.createdAt), { addSuffix: true })}
+                          {formatDistanceToNow(new Date(activity.createdAt), {
+                            addSuffix: true,
+                          })}
                         </p>
                       </div>
                     </div>
@@ -180,7 +211,9 @@ export default async function Analytics() {
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <p className="text-sm text-muted-foreground">No recent activity</p>
+                  <p className="text-sm text-muted-foreground">
+                    No battle history yet
+                  </p>
                 </div>
               )}
             </ScrollArea>
