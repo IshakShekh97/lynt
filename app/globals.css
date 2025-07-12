@@ -769,3 +769,90 @@ body {
     box-shadow: 6px 6px 0px 0px currentColor;
   }
 }
+
+/* Responsive utilities for profile page */
+@media (max-width: 640px) {
+  .brutal-mobile-text {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+  }
+  
+  .brutal-mobile-padding {
+    padding: 1rem;
+  }
+  
+  .brutal-mobile-shadow {
+    box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 1);
+  }
+  
+  .brutal-mobile-gap {
+    gap: 0.75rem;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .brutal-tablet-text {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+  }
+  
+  .brutal-tablet-padding {
+    padding: 1.5rem;
+  }
+  
+  .brutal-tablet-shadow {
+    box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 1);
+  }
+  
+  .brutal-tablet-gap {
+    gap: 1rem;
+  }
+}
+
+/* Enhanced container queries for brutalist design */
+@container (max-width: 400px) {
+  .brutal-container-sm {
+    padding: 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+
+@container (min-width: 401px) and (max-width: 768px) {
+  .brutal-container-md {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+}
+
+/* Responsive brutal shadows */
+.brutal-shadow-responsive {
+  box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
+}
+
+@media (max-width: 640px) {
+  .brutal-shadow-responsive {
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);
+  }
+}
+
+@media (min-width: 1024px) {
+  .brutal-shadow-responsive {
+    box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 1);
+  }
+}
+
+/* Responsive brutal transformations */
+.brutal-transform-responsive {
+  transform: rotate(-1deg);
+  transition: transform 0.3s ease;
+}
+
+@media (max-width: 640px) {
+  .brutal-transform-responsive {
+    transform: rotate(-0.5deg);
+  }
+}
+
+@media (hover: hover) {
+  .brutal-transform-responsive:hover {
+    transform: rotate(1deg) scale(1.05);
+  }
+}

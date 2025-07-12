@@ -65,22 +65,25 @@ export function DangerTabContent({ user }: DangerTabContentProps) {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="space-y-12"
+      className="space-y-8 lg:space-y-12"
     >
       {/* EXTREME Danger Zone Header */}
-      <motion.div variants={dangerVariants} className="text-center space-y-8">
+      <motion.div
+        variants={dangerVariants}
+        className="text-center space-y-6 sm:space-y-8"
+      >
         <div className="relative">
           <ShakeElement intensity="high" trigger="always">
-            <BrutalBox className="inline-block p-6 bg-gradient-to-r from-red-600 via-red-700 to-red-800 border-4 border-black transform -rotate-2">
-              <div className="flex items-center justify-center gap-4">
+            <BrutalBox className="inline-block p-4 sm:p-6 bg-gradient-to-r from-red-600 via-red-700 to-red-800 border-4 border-black transform -rotate-2">
+              <div className="flex items-center justify-center gap-2 sm:gap-4">
                 <motion.div
                   animate={{ rotate: [0, 10, -10, 0] }}
                   transition={{ duration: 1, repeat: Infinity }}
                 >
-                  <Skull className="h-12 w-12 text-white" />
+                  <Skull className="h-8 w-8 sm:h-12 sm:w-12 text-white" />
                 </motion.div>
                 <GlitchText
-                  className="text-5xl font-black text-white uppercase"
+                  className="text-3xl sm:text-4xl lg:text-5xl font-black text-white uppercase"
                   intensity="high"
                   trigger="always"
                 >
@@ -90,7 +93,7 @@ export function DangerTabContent({ user }: DangerTabContentProps) {
                   animate={{ rotate: [0, -10, 10, 0] }}
                   transition={{ duration: 1, repeat: Infinity }}
                 >
-                  <Skull className="h-12 w-12 text-white" />
+                  <Skull className="h-8 w-8 sm:h-12 sm:w-12 text-white" />
                 </motion.div>
               </div>
             </BrutalBox>
@@ -99,7 +102,7 @@ export function DangerTabContent({ user }: DangerTabContentProps) {
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            className="absolute -top-4 -right-4 text-6xl"
+            className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 text-4xl sm:text-6xl"
           >
             🔥
           </motion.div>
@@ -107,15 +110,15 @@ export function DangerTabContent({ user }: DangerTabContentProps) {
           <motion.div
             animate={{ rotate: -360 }}
             transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-            className="absolute -bottom-4 -left-4 text-6xl"
+            className="absolute -bottom-2 -left-2 sm:-bottom-4 sm:-left-4 text-4xl sm:text-6xl"
           >
             ⚡
           </motion.div>
         </div>
 
-        <BrutalBox className="inline-block p-4 bg-yellow-400 border-4 border-black transform rotate-1">
+        <BrutalBox className="inline-block p-3 sm:p-4 bg-yellow-400 border-4 border-black transform rotate-1">
           <GlitchText
-            className="text-2xl font-black text-black uppercase"
+            className="text-lg sm:text-2xl font-black text-black uppercase"
             intensity="medium"
           >
             ⚠️ NO SURVIVORS - NO MERCY ⚠️
@@ -123,7 +126,7 @@ export function DangerTabContent({ user }: DangerTabContentProps) {
         </BrutalBox>
 
         {/* Warning Badges */}
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
           {[
             { icon: "☠️", text: "PERMANENT", color: "bg-red-600" },
             { icon: "💀", text: "IRREVERSIBLE", color: "bg-black" },
@@ -132,9 +135,10 @@ export function DangerTabContent({ user }: DangerTabContentProps) {
           ].map((badge, index) => (
             <ShakeElement key={index} intensity="medium" trigger="hover">
               <Badge
-                className={`${badge.color} text-white border-2 border-black font-black text-lg px-6 py-3 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transform hover:scale-110 transition-all animate-pulse`}
+                className={`${badge.color} text-white border-2 border-black font-black text-sm sm:text-lg px-4 sm:px-6 py-2 sm:py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transform hover:scale-110 transition-all animate-pulse`}
               >
-                {badge.icon} {badge.text}
+                {badge.icon}{" "}
+                <span className="hidden sm:inline">{badge.text}</span>
               </Badge>
             </ShakeElement>
           ))}
@@ -143,20 +147,20 @@ export function DangerTabContent({ user }: DangerTabContentProps) {
 
       {/* MEGA WARNING Section */}
       <motion.div variants={dangerVariants}>
-        <BrutalBox className="p-10 bg-gradient-to-br from-red-500/20 via-orange-500/20 to-yellow-500/20 border-6 border-red-500 shadow-[20px_20px_0px_0px_rgba(255,0,0,0.5)] transform hover:shadow-[25px_25px_0px_0px_rgba(255,0,0,0.7)] transition-all duration-300">
-          <div className="space-y-8">
+        <BrutalBox className="p-6 sm:p-8 lg:p-10 bg-gradient-to-br from-red-500/20 via-orange-500/20 to-yellow-500/20 border-4 sm:border-6 border-red-500 shadow-[16px_16px_0px_0px_rgba(255,0,0,0.5)] sm:shadow-[20px_20px_0px_0px_rgba(255,0,0,0.5)] transform hover:shadow-[20px_20px_0px_0px_rgba(255,0,0,0.7)] sm:hover:shadow-[25px_25px_0px_0px_rgba(255,0,0,0.7)] transition-all duration-300">
+          <div className="space-y-6 sm:space-y-8">
             <div className="text-center">
               <ShakeElement intensity="high" trigger="always">
-                <div className="flex items-center justify-center gap-4 mb-6">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-4 sm:mb-6">
                   <motion.div
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ duration: 1, repeat: Infinity }}
-                    className="p-4 bg-red-600 rounded-lg border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
+                    className="p-3 sm:p-4 bg-red-600 rounded-lg border-2 sm:border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
                   >
-                    <AlertTriangle className="h-10 w-10 text-white" />
+                    <AlertTriangle className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
                   </motion.div>
                   <GlitchText
-                    className="text-4xl font-black text-red-600 uppercase"
+                    className="text-3xl sm:text-4xl font-black text-red-600 uppercase"
                     intensity="high"
                     trigger="always"
                   >
@@ -165,16 +169,16 @@ export function DangerTabContent({ user }: DangerTabContentProps) {
                   <motion.div
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ duration: 1, repeat: Infinity, delay: 0.5 }}
-                    className="p-4 bg-red-600 rounded-lg border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
+                    className="p-3 sm:p-4 bg-red-600 rounded-lg border-2 sm:border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
                   >
-                    <AlertTriangle className="h-10 w-10 text-white" />
+                    <AlertTriangle className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
                   </motion.div>
                 </div>
               </ShakeElement>
 
-              <BrutalBox className="inline-block p-6 bg-black text-white border-4 border-red-500">
+              <BrutalBox className="inline-block p-4 sm:p-6 bg-black text-white border-2 sm:border-4 border-red-500">
                 <GlitchText
-                  className="text-2xl font-black uppercase"
+                  className="text-xl sm:text-2xl font-black uppercase"
                   intensity="medium"
                 >
                   💀 THESE ACTIONS WILL OBLITERATE YOUR EXISTENCE 💀
@@ -182,17 +186,17 @@ export function DangerTabContent({ user }: DangerTabContentProps) {
               </BrutalBox>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <BrutalBox className="p-6 bg-red-500/10 border-3 border-red-500">
-                <div className="text-center space-y-4">
-                  <Shield className="h-16 w-16 mx-auto text-red-500 animate-pulse" />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+              <BrutalBox className="p-4 sm:p-6 bg-red-500/10 border-2 sm:border-3 border-red-500">
+                <div className="text-center space-y-3 sm:space-y-4">
+                  <Shield className="h-12 w-12 sm:h-16 sm:w-16 mx-auto text-red-500 animate-pulse" />
                   <GlitchText
-                    className="text-xl font-black text-red-600 uppercase"
+                    className="text-lg sm:text-xl font-black text-red-600 uppercase"
                     intensity="medium"
                   >
                     ⚠️ NO RECOVERY POSSIBLE ⚠️
                   </GlitchText>
-                  <p className="font-bold text-red-600">
+                  <p className="font-bold text-red-600 text-sm sm:text-base">
                     Once you cross this line, there is no going back to the
                     light.
                   </p>

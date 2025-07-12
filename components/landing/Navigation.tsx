@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Menu, X, LogOut, LayoutDashboard, User } from "lucide-react";
+import { Menu, X, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { useSession, signOut } from "@/lib/auth-client";
@@ -126,8 +126,15 @@ export default function Navigation() {
                       <BrutalBox className="p-1">
                         <Avatar className="h-8 w-8 border-2 border-foreground">
                           <AvatarImage
-                            src={session.user.image ?? ""}
+                            src={`/api/profile-image/${session.user.id}`}
                             alt={session.user.name ?? ""}
+                            onError={(e) => {
+                              // Fallback to session image if profile image fails to load
+                              const target = e.target as HTMLImageElement;
+                              if (target.src.includes("/api/profile-image/")) {
+                                target.src = session.user.image ?? "";
+                              }
+                            }}
                           />
                           <AvatarFallback className="bg-primary text-primary-foreground font-bold">
                             {session.user.name?.charAt(0)?.toUpperCase() ?? "U"}
@@ -150,15 +157,6 @@ export default function Navigation() {
                       </div>
                     </div>
                     <DropdownMenuSeparator className="bg-foreground" />
-                    <DropdownMenuItem asChild>
-                      <Link
-                        href="/dashboard"
-                        className="flex items-center gap-2 font-bold cursor-pointer"
-                      >
-                        <LayoutDashboard className="h-4 w-4" />
-                        <span>🔥 DASHBOARD</span>
-                      </Link>
-                    </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link
                         href="/dashboard/profile"
@@ -284,7 +282,7 @@ export default function Navigation() {
                     </BrutalBox>
                     <ShakeElement intensity="low" trigger="hover">
                       <Link
-                        href="/dashboard"
+                        href="/dashboard/profile"
                         className="block"
                         onClick={() => setIsMenuOpen(false)}
                       >
@@ -293,7 +291,7 @@ export default function Navigation() {
                           className="w-full p-3 text-center"
                         >
                           <span className="font-bold text-lg tracking-wider uppercase">
-                            🔥 DASHBOARD
+                            � PROFILE
                           </span>
                         </BrutalBox>
                       </Link>

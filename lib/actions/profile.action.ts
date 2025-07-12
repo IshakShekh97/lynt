@@ -270,3 +270,42 @@ export const getUserSessions = async () => {
     };
   }
 };
+
+export const getProfileImageUrl = async (
+  userId: string
+): Promise<string | null> => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        profileImage: true,
+        profileImageMimeType: true,
+      },
+    });
+
+    if (!user || !user.profileImage || !user.profileImageMimeType) {
+      return null;
+    }
+
+    return `/api/profile-image/${userId}`;
+  } catch (error) {
+    console.error("Error getting profile image URL:", error);
+    return null;
+  }
+};
+
+export const hasProfileImage = async (userId: string): Promise<boolean> => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        profileImage: true,
+      },
+    });
+
+    return !!(user && user.profileImage);
+  } catch (error) {
+    console.error("Error checking profile image:", error);
+    return false;
+  }
+};

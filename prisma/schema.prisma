@@ -4,23 +4,26 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  // provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id            String        @id
-  name          String
-  email         String
-  emailVerified Boolean
-  image         String?
-  createdAt     DateTime
-  updatedAt     DateTime
-  username      String
-  sessions      Session[]
-  accounts      Account[]
-  socialLinks   SocialLink[]
-  links         Link[] // Add this line
-  activities    ActivityLog[]
+  id                   String        @id
+  name                 String
+  email                String
+  emailVerified        Boolean
+  image                String?
+  profileImage         Bytes? // Store profile image as bytes
+  profileImageMimeType String? // Store MIME type for proper display
+  createdAt            DateTime
+  updatedAt            DateTime
+  username             String
+  sessions             Session[]
+  accounts             Account[]
+  socialLinks          SocialLink[]
+  links                Link[] // Add this line
+  activities           ActivityLog[]
 
   bio String?
 

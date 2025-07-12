@@ -152,22 +152,25 @@ export function SessionsTabContent() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="space-y-10"
+      className="space-y-8 lg:space-y-10"
     >
       {/* BRUTAL Sessions Header */}
-      <motion.div variants={brutalSlideIn} className="text-center space-y-6">
+      <motion.div
+        variants={brutalSlideIn}
+        className="text-center space-y-4 sm:space-y-6"
+      >
         <div className="relative">
           <ShakeElement intensity="medium" trigger="hover">
-            <BrutalBox className="inline-block p-6 bg-gradient-to-r from-orange-500 to-red-500 border-4 border-black transform -rotate-1 hover:rotate-1 transition-transform duration-300">
-              <div className="flex items-center gap-4">
+            <BrutalBox className="inline-block p-4 sm:p-6 bg-gradient-to-r from-orange-500 to-red-500 border-4 border-black transform -rotate-1 hover:rotate-1 transition-transform duration-300">
+              <div className="flex items-center gap-2 sm:gap-4">
                 <motion.div
                   animate={{ rotate: [0, 10, -10, 0] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
-                  <Eye className="h-10 w-10 text-white" />
+                  <Eye className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
                 </motion.div>
                 <GlitchText
-                  className="text-4xl font-black text-white uppercase"
+                  className="text-2xl sm:text-3xl lg:text-4xl font-black text-white uppercase"
                   intensity="high"
                   trigger="hover"
                 >
@@ -177,16 +180,16 @@ export function SessionsTabContent() {
                   animate={{ rotate: [0, -10, 10, 0] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
-                  <Eye className="h-10 w-10 text-white" />
+                  <Eye className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
                 </motion.div>
               </div>
             </BrutalBox>
           </ShakeElement>
         </div>
 
-        <BrutalBox className="inline-block p-4 bg-yellow-400 border-4 border-black transform rotate-1">
+        <BrutalBox className="inline-block p-3 sm:p-4 bg-yellow-400 border-4 border-black transform rotate-1">
           <GlitchText
-            className="text-xl font-black text-black uppercase"
+            className="text-lg sm:text-xl font-black text-black uppercase"
             intensity="medium"
           >
             👁️ EVERY DEVICE IS BEING WATCHED 👁️
@@ -194,7 +197,7 @@ export function SessionsTabContent() {
         </BrutalBox>
 
         {/* Warning Badges */}
-        <div className="flex flex-wrap justify-center gap-3">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
           {[
             { icon: "🔍", text: "SURVEILLANCE", color: "bg-blue-600" },
             { icon: "⚡", text: "ACTIVE TRACKING", color: "bg-yellow-600" },

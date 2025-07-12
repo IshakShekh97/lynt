@@ -115,18 +115,21 @@ export default function ProfilePage() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="relative z-10 max-w-6xl mx-auto p-6 space-y-12"
+        className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8 lg:space-y-12"
       >
         {/* Brutal Header */}
-        <motion.div variants={brutalSlideIn} className="text-center space-y-8">
+        <motion.div
+          variants={brutalSlideIn}
+          className="text-center space-y-6 lg:space-y-8"
+        >
           <div className="relative">
             <ShakeElement intensity="medium" trigger="hover">
               <BrutalBox
                 variant="destructive"
-                className="inline-block p-4 transform -rotate-2 hover:rotate-2 transition-transform duration-300"
+                className="inline-block p-3 sm:p-4 transform -rotate-2 hover:rotate-2 transition-transform duration-300"
               >
                 <GlitchText
-                  className="text-6xl md:text-8xl font-black text-white uppercase tracking-tight"
+                  className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black text-white uppercase tracking-tight"
                   intensity="high"
                   trigger="hover"
                 >
@@ -138,7 +141,7 @@ export default function ProfilePage() {
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="absolute -top-4 -right-4 text-4xl"
+              className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 text-2xl sm:text-4xl"
             >
               🔥
             </motion.div>
@@ -146,15 +149,15 @@ export default function ProfilePage() {
             <motion.div
               animate={{ rotate: -360 }}
               transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-              className="absolute -bottom-4 -left-4 text-4xl"
+              className="absolute -bottom-2 -left-2 sm:-bottom-4 sm:-left-4 text-2xl sm:text-4xl"
             >
               ⚡
             </motion.div>
           </div>
 
-          <BrutalBox className="inline-block p-4 bg-yellow-400 border-4 border-black transform rotate-1 hover:-rotate-1 transition-transform duration-300">
+          <BrutalBox className="inline-block p-3 sm:p-4 bg-yellow-400 border-4 border-black transform rotate-1 hover:-rotate-1 transition-transform duration-300">
             <GlitchText
-              className="text-2xl md:text-3xl font-black text-black uppercase"
+              className="text-xl sm:text-2xl md:text-3xl font-black text-black uppercase"
               intensity="medium"
               trigger="hover"
             >
@@ -163,7 +166,7 @@ export default function ProfilePage() {
           </BrutalBox>
 
           {/* Warning Badges */}
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
             {[
               { icon: "💀", text: "HARDCORE MODE", color: "bg-red-500" },
               { icon: "🔥", text: "NO MERCY", color: "bg-orange-500" },
@@ -171,9 +174,10 @@ export default function ProfilePage() {
             ].map((badge, index) => (
               <ShakeElement key={index} intensity="low" trigger="hover">
                 <Badge
-                  className={`${badge.color} text-white border-2 border-black font-black text-lg px-4 py-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transform hover:scale-110 transition-all`}
+                  className={`${badge.color} text-white border-2 border-black font-black text-sm sm:text-lg px-3 sm:px-4 py-1 sm:py-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transform hover:scale-110 transition-all`}
                 >
-                  {badge.icon} {badge.text}
+                  {badge.icon}{" "}
+                  <span className="hidden sm:inline">{badge.text}</span>
                 </Badge>
               </ShakeElement>
             ))}
@@ -182,52 +186,55 @@ export default function ProfilePage() {
 
         {/* Profile Tabs with EXTREME Brutal Design */}
         <motion.div variants={brutalBounce}>
-          <BrutalBox className="p-8 bg-background/90 backdrop-blur-md border-4 border-black shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] transform hover:shadow-[20px_20px_0px_0px_rgba(0,0,0,1)] transition-all duration-300">
+          <BrutalBox className="p-4 sm:p-6 lg:p-8 bg-background/90 backdrop-blur-md border-4 border-black shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] transform hover:shadow-[20px_20px_0px_0px_rgba(0,0,0,1)] transition-all duration-300">
             <Tabs defaultValue="profile" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 h-20 p-2 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+              <TabsList className="grid w-full grid-cols-3 h-16 sm:h-20 p-2 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
                 <TabsTrigger
                   value="profile"
-                  className="flex flex-col items-center gap-2 text-lg font-black h-full data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] data-[state=active]:border-2 data-[state=active]:border-black transition-all duration-300 hover:scale-105"
+                  className="flex flex-col items-center gap-1 sm:gap-2 text-sm sm:text-lg font-black h-full data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] data-[state=active]:border-2 data-[state=active]:border-black transition-all duration-300 hover:scale-105"
                 >
-                  <User className="h-6 w-6" />
-                  <span className="uppercase tracking-wider">
-                    💀 PROFILE 💀
+                  <User className="h-4 w-4 sm:h-6 sm:w-6" />
+                  <span className="uppercase tracking-wider text-xs sm:text-base">
+                    <span className="hidden sm:inline">💀 PROFILE 💀</span>
+                    <span className="sm:hidden">💀</span>
                   </span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="sessions"
-                  className="flex flex-col items-center gap-2 text-lg font-black h-full data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] data-[state=active]:border-2 data-[state=active]:border-black transition-all duration-300 hover:scale-105"
+                  className="flex flex-col items-center gap-1 sm:gap-2 text-sm sm:text-lg font-black h-full data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] data-[state=active]:border-2 data-[state=active]:border-black transition-all duration-300 hover:scale-105"
                 >
-                  <Activity className="h-6 w-6" />
-                  <span className="uppercase tracking-wider">
-                    🔥 SESSIONS 🔥
+                  <Activity className="h-4 w-4 sm:h-6 sm:w-6" />
+                  <span className="uppercase tracking-wider text-xs sm:text-base">
+                    <span className="hidden sm:inline">🔥 SESSIONS 🔥</span>
+                    <span className="sm:hidden">🔥</span>
                   </span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="danger"
-                  className="flex flex-col items-center gap-2 text-lg font-black h-full data-[state=active]:bg-red-500 data-[state=active]:text-white data-[state=active]:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] data-[state=active]:border-2 data-[state=active]:border-black transition-all duration-300 hover:scale-105"
+                  className="flex flex-col items-center gap-1 sm:gap-2 text-sm sm:text-lg font-black h-full data-[state=active]:bg-red-500 data-[state=active]:text-white data-[state=active]:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] data-[state=active]:border-2 data-[state=active]:border-black transition-all duration-300 hover:scale-105"
                 >
-                  <Trash2 className="h-6 w-6" />
-                  <span className="uppercase tracking-wider">
-                    ⚡ DESTROY ⚡
+                  <Trash2 className="h-4 w-4 sm:h-6 sm:w-6" />
+                  <span className="uppercase tracking-wider text-xs sm:text-base">
+                    <span className="hidden sm:inline">⚡ DESTROY ⚡</span>
+                    <span className="sm:hidden">⚡</span>
                   </span>
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="profile" className="mt-8">
+              <TabsContent value="profile" className="mt-6 sm:mt-8">
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <div className="mb-6">
+                  <div className="mb-4 sm:mb-6">
                     <ShakeElement intensity="low" trigger="hover">
                       <BrutalBox
                         variant="warning"
-                        className="inline-block p-3 transform -rotate-1"
+                        className="inline-block p-2 sm:p-3 transform -rotate-1"
                       >
                         <GlitchText
-                          className="text-2xl font-black text-black uppercase"
+                          className="text-lg sm:text-2xl font-black text-black uppercase"
                           intensity="medium"
                         >
                           🚨 MODIFY YOUR EXISTENCE 🚨
@@ -242,20 +249,20 @@ export default function ProfilePage() {
               </TabsContent>
 
               {/* Sessions Tab */}
-              <TabsContent value="sessions" className="mt-8">
+              <TabsContent value="sessions" className="mt-6 sm:mt-8">
                 <motion.div
                   initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <div className="mb-6">
+                  <div className="mb-4 sm:mb-6">
                     <ShakeElement intensity="medium" trigger="hover">
                       <BrutalBox
                         variant="destructive"
-                        className="inline-block p-3 transform rotate-1"
+                        className="inline-block p-2 sm:p-3 transform rotate-1"
                       >
                         <GlitchText
-                          className="text-2xl font-black text-white uppercase"
+                          className="text-lg sm:text-2xl font-black text-white uppercase"
                           intensity="high"
                         >
                           🔥 YOUR DIGITAL FOOTPRINTS 🔥
@@ -270,20 +277,20 @@ export default function ProfilePage() {
               </TabsContent>
 
               {/* Danger Tab */}
-              <TabsContent value="danger" className="mt-8">
+              <TabsContent value="danger" className="mt-6 sm:mt-8">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5, type: "spring", stiffness: 200 }}
                 >
-                  <div className="mb-6 text-center">
+                  <div className="mb-4 sm:mb-6 text-center">
                     <ShakeElement intensity="high" trigger="always">
                       <BrutalBox
                         variant="destructive"
-                        className="inline-block p-4 bg-gradient-to-r from-red-600 to-red-800"
+                        className="inline-block p-3 sm:p-4 bg-gradient-to-r from-red-600 to-red-800"
                       >
                         <GlitchText
-                          className="text-3xl font-black text-white uppercase"
+                          className="text-xl sm:text-2xl lg:text-3xl font-black text-white uppercase"
                           intensity="high"
                           trigger="always"
                         >
@@ -292,7 +299,7 @@ export default function ProfilePage() {
                       </BrutalBox>
                     </ShakeElement>
                     <div className="mt-4">
-                      <Badge className="bg-red-500 text-white border-2 border-black font-black text-lg px-4 py-2 animate-pulse">
+                      <Badge className="bg-red-500 text-white border-2 border-black font-black text-sm sm:text-lg px-3 sm:px-4 py-1 sm:py-2 animate-pulse">
                         🚫 NO SURVIVORS 🚫
                       </Badge>
                     </div>
@@ -313,17 +320,17 @@ export default function ProfilePage() {
           transition={{ delay: 0.8, duration: 0.6 }}
           className="text-center"
         >
-          <BrutalBox className="inline-block p-6 bg-gradient-to-r from-purple-600 to-pink-600 transform rotate-1 hover:-rotate-1 transition-transform duration-300">
-            <div className="flex items-center gap-3">
-              <Flame className="h-8 w-8 text-yellow-300 animate-bounce" />
+          <BrutalBox className="inline-block p-4 sm:p-6 bg-gradient-to-r from-purple-600 to-pink-600 transform rotate-1 hover:-rotate-1 transition-transform duration-300">
+            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
+              <Flame className="h-6 w-6 sm:h-8 sm:w-8 text-yellow-300 animate-bounce" />
               <GlitchText
-                className="text-xl font-black text-white uppercase"
+                className="text-sm sm:text-xl font-black text-white uppercase text-center"
                 intensity="medium"
                 trigger="hover"
               >
                 CHANGES ARE PERMANENT - NO CRYING ALLOWED
               </GlitchText>
-              <Zap className="h-8 w-8 text-yellow-300 animate-pulse" />
+              <Zap className="h-6 w-6 sm:h-8 sm:w-8 text-yellow-300 animate-pulse" />
             </div>
           </BrutalBox>
         </motion.div>
