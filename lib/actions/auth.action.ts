@@ -38,6 +38,7 @@ export const SignUp = async (
         password,
         name,
         username,
+        displayUsername: username,
       },
     });
 

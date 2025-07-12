@@ -5,7 +5,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div>
       <Navigation />
-      <div className="container mx-auto my-10 max-sm:px-3">{children}</div>
+      {children}
     </div>
   );
 };

@@ -9,6 +9,7 @@ import {
   ShakeElement,
 } from "@/components/ui/brutal-effects";
 import { FloatingGeometricShapes } from "./FloatingGeometricShapes";
+import Link from "next/link";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -145,8 +146,9 @@ export const HeroSection = () => {
                 <Button
                   size="lg"
                   className="px-8 py-4 text-lg font-black uppercase tracking-wide border-4 border-black bg-primary text-primary-foreground hover:bg-primary/90 transform hover:scale-105 transition-all duration-200"
+                  asChild
                 >
-                  💀 START DESTROYING 💀
+                  <Link href={"/sign-up"}>💀 START DESTROYING 💀</Link>
                 </Button>
               </BrutalBox>
             </ShakeElement>
@@ -157,8 +159,9 @@ export const HeroSection = () => {
                   variant="outline"
                   size="lg"
                   className="px-8 py-4 text-lg font-black uppercase tracking-wide border-4 border-black bg-yellow-400 text-black hover:bg-yellow-300 transform hover:scale-105 transition-all duration-200 dark:bg-yellow-600 dark:text-white dark:border-white dark:hover:bg-yellow-500"
+                  asChild
                 >
-                  🔥 SEE THE CHAOS 🔥
+                  <Link href="/sign-in">🔥 SEE THE CHAOS 🔥</Link>
                 </Button>
               </BrutalBox>
             </ShakeElement>
