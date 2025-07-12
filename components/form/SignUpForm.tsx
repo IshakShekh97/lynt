@@ -56,11 +56,8 @@ const SignUpForm = () => {
       );
 
       if (result.success) {
-        toast.success(
-          result.message + " Please check your email for verification."
-        );
-        // Don't redirect to dashboard immediately since email needs verification
-        router.push("/verify-email");
+        toast.success(result.message);
+        router.push("/dashboard");
       } else {
         toast.error(result.message);
       }
