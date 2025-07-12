@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id            String       @id
+  id            String        @id
   name          String
   email         String
   emailVerified Boolean
@@ -21,6 +21,8 @@ model User {
   socialLinks   SocialLink[]
   links         Link[] // Add this line
   activities    ActivityLog[]
+
+  bio String?
 
   @@unique([email])
   @@unique([username])
@@ -86,37 +88,37 @@ model SocialLink {
 }
 
 model Link {
-  id          String   @id @default(cuid())
+  id          String        @id @default(cuid())
   userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   title       String
   url         String
   description String?
   emoji       String?
   thumbnail   String?
-  order       Int      @default(0)
-  isActive    Boolean  @default(true)
-  clicks      Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  order       Int           @default(0)
+  isActive    Boolean       @default(true)
+  clicks      Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
   activities  ActivityLog[]
 
   @@map("link")
 }
 
 model ActivityLog {
-  id          String      @id @default(cuid())
-  userId      String
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  linkId      String?
-  link        Link?       @relation(fields: [linkId], references: [id], onDelete: Cascade)
-  action      String      // "created", "updated", "deleted", "clicked", "enabled", "disabled"
-  entity      String      // "link", "social_link", "user"
-  entityId    String?
-  details     String?     // JSON string for additional details
-  ipAddress   String?
-  userAgent   String?
-  createdAt   DateTime    @default(now())
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  linkId    String?
+  link      Link?    @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  action    String // "created", "updated", "deleted", "clicked", "enabled", "disabled"
+  entity    String // "link", "social_link", "user"
+  entityId  String?
+  details   String? // JSON string for additional details
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
 
   @@map("activity_log")
 }

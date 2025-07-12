@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Menu, X, LogOut, LayoutDashboard } from "lucide-react";
+import { Menu, X, LogOut, LayoutDashboard, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { useSession, signOut } from "@/lib/auth-client";
@@ -157,6 +157,15 @@ export default function Navigation() {
                       >
                         <LayoutDashboard className="h-4 w-4" />
                         <span>🔥 DASHBOARD</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/dashboard/profile"
+                        className="flex items-center gap-2 font-bold cursor-pointer"
+                      >
+                        <User className="h-4 w-4" />
+                        <span>👤 PROFILE</span>
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator className="bg-foreground" />

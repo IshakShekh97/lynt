@@ -1,8 +1,13 @@
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { FloatingGeometricShapes } from "@/components/landing/FloatingGeometricShapes";
-import { AuthAnimatedBackground } from "@/components/landing/AuthAnimatedBackground";
+import {
+  BrutalBox,
+  GlitchText,
+  ShakeElement,
+} from "@/components/ui/brutal-effects";
 import { getSession } from "@/lib/auth";
 import { headers } from "next/headers";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
 
@@ -34,10 +39,23 @@ const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
       {/* Background Geometric Shapes */}
       <FloatingGeometricShapes className="opacity-20" />
 
-      {/* Auth-specific Animated Background */}
-      <AuthAnimatedBackground className="opacity-30" />
-
-      <div className="relative z-10 flex items-center justify-center min-h-dvh p-4">
+      <div className="relative z-10 flex items-center justify-center flex-col min-h-dvh p-4">
+        <ShakeElement intensity="high" trigger="hover">
+          <Link href="/" className="block">
+            <BrutalBox
+              variant="destructive"
+              className="p-3 transform -rotate-1 hover:rotate-1 transition-transform duration-300"
+            >
+              <GlitchText
+                className="text-2xl font-black text-white tracking-wider"
+                intensity="high"
+                trigger="always"
+              >
+                💀 LYNTBRUTT 💀
+              </GlitchText>
+            </BrutalBox>
+          </Link>
+        </ShakeElement>
         {children}
       </div>
 
