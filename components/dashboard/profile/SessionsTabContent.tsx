@@ -1,16 +1,40 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { SessionsList } from "./SessionsList";
-import { SessionActions } from "./SessionActions";
 import {
   BrutalBox,
   GlitchText,
   ShakeElement,
 } from "@/components/ui/brutal-effects";
-import { Activity, Shield, Skull, Eye } from "lucide-react";
+import { Activity, Shield, Skull, Eye, LogOut, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useSession } from "@/lib/auth-client";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { useState, useEffect } from "react";
+
+interface Session {
+  id: string;
+  token: string;
+  createdAt: Date;
+  updatedAt: Date;
+  expiresAt: Date;
+  userId: string;
+  userAgent?: string | null;
+  ipAddress?: string | null;
+}
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -40,6 +64,84 @@ const brutalSlideIn = {
 
 export function SessionsTabContent() {
   const { data: session } = useSession();
+  const [sessions, setSessions] = useState<Session[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [revoking, setRevoking] = useState<string | null>(null);
+  const [revokingOther, setRevokingOther] = useState(false);
+  const [revokingAll, setRevokingAll] = useState(false);
+
+  useEffect(() => {
+    loadSessions();
+  }, []);
+
+  const loadSessions = async () => {
+    try {
+      setLoading(true);
+      const response = await authClient.multiSession.listDeviceSessions();
+      if (response.data) {
+        // Transform the response to match our Session interface
+        const transformedSessions: Session[] = response.data.map((item) => ({
+          id: item.session.id,
+          token: item.session.token,
+          createdAt: new Date(item.session.createdAt),
+          updatedAt: new Date(item.session.updatedAt),
+          expiresAt: new Date(item.session.expiresAt),
+          userId: item.session.userId,
+          userAgent: item.session.userAgent,
+          ipAddress: item.session.ipAddress,
+        }));
+        setSessions(transformedSessions);
+      } else {
+        setSessions([]);
+      }
+    } catch (error) {
+      console.error("Failed to load sessions:", error);
+      toast.error("Failed to load sessions");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const revokeSession = async (sessionToken: string) => {
+    try {
+      setRevoking(sessionToken);
+      await authClient.multiSession.revoke({ sessionToken });
+      toast.success("Session revoked successfully");
+      await loadSessions();
+    } catch (error) {
+      console.error("Failed to revoke session:", error);
+      toast.error("Failed to revoke session");
+    } finally {
+      setRevoking(null);
+    }
+  };
+
+  const revokeOtherSessions = async () => {
+    try {
+      setRevokingOther(true);
+      await authClient.revokeOtherSessions();
+      toast.success("All other sessions revoked successfully");
+      await loadSessions();
+    } catch (error) {
+      console.error("Failed to revoke other sessions:", error);
+      toast.error("Failed to revoke other sessions");
+    } finally {
+      setRevokingOther(false);
+    }
+  };
+
+  const revokeAllSessions = async () => {
+    try {
+      setRevokingAll(true);
+      await authClient.revokeSessions();
+      toast.success("All sessions revoked successfully");
+    } catch (error) {
+      console.error("Failed to revoke all sessions:", error);
+      toast.error("Failed to revoke all sessions");
+    } finally {
+      setRevokingAll(false);
+    }
+  };
 
   if (!session) {
     return null;
@@ -244,7 +346,184 @@ export function SessionsTabContent() {
               </p>
             </BrutalBox>
 
-            <SessionsList currentSessionId={session.session.id} />
+            {/* Inline Sessions List with Alert Dialogs */}
+            <div className="space-y-4">
+              {/* Header with session count */}
+              <div className="text-center">
+                <h3 className="text-lg font-black text-orange-600 uppercase">
+                  👁️ {sessions.length} Active Invasions Detected 👁️
+                </h3>
+              </div>
+
+              {loading ? (
+                <div className="text-center py-8">
+                  <Loader2 className="h-8 w-8 animate-spin mx-auto text-orange-500" />
+                  <p className="mt-2 text-orange-600 font-bold">
+                    SCANNING INVASIONS...
+                  </p>
+                </div>
+              ) : sessions.length === 0 ? (
+                <BrutalBox className="p-6 bg-orange-500/20 border-2 border-orange-500 text-center">
+                  <p className="text-orange-600 font-black uppercase">
+                    🔍 NO INVASIONS DETECTED 🔍
+                  </p>
+                </BrutalBox>
+              ) : (
+                sessions.map((sessionItem) => {
+                  const isCurrentSession =
+                    sessionItem.id === session?.session.id;
+                  return (
+                    <BrutalBox
+                      key={sessionItem.id}
+                      className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ${
+                        isCurrentSession
+                          ? "bg-green-50 dark:bg-green-950/20 border-green-500"
+                          : "bg-orange-50 dark:bg-orange-950/20 border-orange-500"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start gap-4">
+                          <div
+                            className={`p-2 rounded-lg border-2 border-black ${
+                              isCurrentSession
+                                ? "bg-green-500"
+                                : "bg-orange-500"
+                            }`}
+                          >
+                            <Eye className="h-5 w-5 text-white" />
+                          </div>
+
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2">
+                              <h4 className="font-black text-sm">
+                                🕵️ INVASION #{sessionItem.id.slice(0, 8)}...
+                                {sessionItem.id.slice(-4)}
+                              </h4>
+                              {isCurrentSession && (
+                                <Badge className="text-xs bg-green-500 text-white border-2 border-black font-black">
+                                  CURRENT
+                                </Badge>
+                              )}
+                            </div>
+
+                            <div className="text-xs space-y-1">
+                              <div className="flex items-center gap-2">
+                                <span className="font-black text-orange-600">
+                                  ⏰ LAST SEEN:
+                                </span>
+                                <span className="font-mono">
+                                  {new Date(
+                                    sessionItem.updatedAt
+                                  ).toLocaleString()}
+                                </span>
+                              </div>
+                              {sessionItem.ipAddress && (
+                                <div className="flex items-center gap-2">
+                                  <span className="font-black text-orange-600">
+                                    🌐 IP TRACED:
+                                  </span>
+                                  <span className="font-mono">
+                                    {sessionItem.ipAddress}
+                                  </span>
+                                </div>
+                              )}
+                              {sessionItem.userAgent && (
+                                <div className="mt-2">
+                                  <span className="font-black text-orange-600">
+                                    🔍 SIGNATURE:
+                                  </span>
+                                  <div className="font-mono text-xs bg-orange-500/10 p-2 rounded border border-orange-500 mt-1">
+                                    {sessionItem.userAgent}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        {!isCurrentSession && (
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <ShakeElement>
+                                <Button
+                                  variant="destructive"
+                                  size="sm"
+                                  disabled={revoking === sessionItem.token}
+                                  className="border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all font-black"
+                                >
+                                  {revoking === sessionItem.token ? (
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                  ) : (
+                                    <>
+                                      <LogOut className="h-4 w-4 mr-2" />
+                                      TERMINATE
+                                    </>
+                                  )}
+                                </Button>
+                              </ShakeElement>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent className="border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-red-50 dark:bg-red-950/20">
+                              <AlertDialogHeader>
+                                <AlertDialogTitle className="flex items-center gap-2 text-red-600">
+                                  <Skull className="h-5 w-5" />
+                                  💀 TERMINATE INVASION 💀
+                                </AlertDialogTitle>
+                                <AlertDialogDescription className="space-y-2">
+                                  <p className="font-bold text-red-700">
+                                    ⚠️ You are about to terminate this session:
+                                  </p>
+                                  <div className="bg-red-100 dark:bg-red-950/50 p-3 rounded border-2 border-red-500">
+                                    <div className="text-sm space-y-1">
+                                      <p>
+                                        <strong>Session ID:</strong>{" "}
+                                        {sessionItem.id.slice(0, 8)}...
+                                        {sessionItem.id.slice(-8)}
+                                      </p>
+                                      {sessionItem.ipAddress && (
+                                        <p>
+                                          <strong>IP Address:</strong>{" "}
+                                          {sessionItem.ipAddress}
+                                        </p>
+                                      )}
+                                      <p>
+                                        <strong>Last Active:</strong>{" "}
+                                        {new Date(
+                                          sessionItem.updatedAt
+                                        ).toLocaleString()}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <p className="text-red-600 font-bold">
+                                    This will immediately sign out this device.
+                                    This action cannot be undone.
+                                  </p>
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel className="border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-bold">
+                                  Cancel
+                                </AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() =>
+                                    revokeSession(sessionItem.token)
+                                  }
+                                  className="bg-red-600 hover:bg-red-700 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-black"
+                                  disabled={revoking === sessionItem.token}
+                                >
+                                  {revoking === sessionItem.token
+                                    ? "TERMINATING..."
+                                    : "💀 TERMINATE SESSION 💀"}
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        )}
+                      </div>
+                    </BrutalBox>
+                  );
+                })
+              )}
+            </div>
           </div>
         </BrutalBox>
       </motion.div>
@@ -276,7 +555,176 @@ export function SessionsTabContent() {
               </p>
             </BrutalBox>
 
-            <SessionActions />
+            {/* Inline Session Actions with Alert Dialogs */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Revoke Other Sessions */}
+              <BrutalBox className="p-6 bg-orange-50 dark:bg-orange-950/20 border-2 border-orange-500 shadow-[4px_4px_0px_0px_rgba(255,165,0,0.3)]">
+                <div className="space-y-4">
+                  <div className="text-center">
+                    <div className="p-3 bg-orange-500 rounded-lg border-2 border-black inline-block mb-2">
+                      <Shield className="h-6 w-6 text-white" />
+                    </div>
+                    <h3 className="font-black text-lg text-orange-600 uppercase">
+                      ⚡ Partial Termination ⚡
+                    </h3>
+                    <p className="text-xs text-orange-600">
+                      Terminate all other invasions except this one
+                    </p>
+                  </div>
+
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <ShakeElement>
+                        <Button
+                          variant="outline"
+                          className="w-full border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all font-black"
+                          disabled={revokingOther}
+                        >
+                          {revokingOther ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          ) : (
+                            <Shield className="mr-2 h-4 w-4" />
+                          )}
+                          {revokingOther
+                            ? "TERMINATING..."
+                            : "TERMINATE OTHERS"}
+                        </Button>
+                      </ShakeElement>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-orange-50 dark:bg-orange-950/20">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="flex items-center gap-2 text-orange-600">
+                          <Shield className="h-5 w-5" />⚡ TERMINATE OTHER
+                          INVASIONS ⚡
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="space-y-2">
+                          <p className="font-bold text-orange-700">
+                            This will terminate ALL other active sessions while
+                            keeping you signed in on this device.
+                          </p>
+                          <div className="bg-orange-100 dark:bg-orange-950/50 p-3 rounded border-2 border-orange-500">
+                            <p className="text-sm">
+                              <strong>Sessions to terminate:</strong>{" "}
+                              {
+                                sessions.filter(
+                                  (s) => s.id !== session?.session.id
+                                ).length
+                              }{" "}
+                              invasions
+                            </p>
+                            <p className="text-sm">
+                              <strong>This device:</strong> Will remain active
+                            </p>
+                          </div>
+                          <p className="text-orange-600 font-bold">
+                            Use this if you suspect unauthorized access but want
+                            to stay logged in here.
+                          </p>
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel className="border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-bold">
+                          Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={revokeOtherSessions}
+                          className="bg-orange-600 hover:bg-orange-700 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-black"
+                          disabled={revokingOther}
+                        >
+                          {revokingOther
+                            ? "TERMINATING..."
+                            : "⚡ TERMINATE OTHERS ⚡"}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              </BrutalBox>
+
+              {/* Revoke ALL Sessions */}
+              <BrutalBox className="p-6 bg-red-50 dark:bg-red-950/20 border-2 border-red-500 shadow-[4px_4px_0px_0px_rgba(255,0,0,0.3)]">
+                <div className="space-y-4">
+                  <div className="text-center">
+                    <div className="p-3 bg-red-600 rounded-lg border-2 border-black inline-block mb-2">
+                      <Skull className="h-6 w-6 text-white" />
+                    </div>
+                    <h3 className="font-black text-lg text-red-600 uppercase">
+                      💀 Total Annihilation 💀
+                    </h3>
+                    <p className="text-xs text-red-600">
+                      Terminate ALL invasions including this one
+                    </p>
+                  </div>
+
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <ShakeElement intensity="high">
+                        <Button
+                          variant="destructive"
+                          className="w-full border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all font-black"
+                          disabled={revokingAll}
+                        >
+                          {revokingAll ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          ) : (
+                            <Skull className="mr-2 h-4 w-4" />
+                          )}
+                          {revokingAll
+                            ? "ANNIHILATING..."
+                            : "TOTAL ANNIHILATION"}
+                        </Button>
+                      </ShakeElement>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-red-50 dark:bg-red-950/20">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="flex items-center gap-2 text-red-600">
+                          <Skull className="h-5 w-5" />
+                          💀 TOTAL ANNIHILATION WARNING 💀
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="space-y-2">
+                          <p className="font-bold text-red-700">
+                            ⚠️ CRITICAL WARNING: This will terminate ALL
+                            sessions including this one!
+                          </p>
+                          <div className="bg-red-100 dark:bg-red-950/50 p-3 rounded border-2 border-red-500">
+                            <p className="text-sm">
+                              <strong>Total sessions to terminate:</strong>{" "}
+                              {sessions.length} invasions
+                            </p>
+                            <p className="text-sm">
+                              <strong>Effect:</strong> You will be immediately
+                              logged out everywhere
+                            </p>
+                            <p className="text-sm">
+                              <strong>Recovery:</strong> You will need to sign
+                              in again
+                            </p>
+                          </div>
+                          <p className="text-red-600 font-bold">
+                            Only use this if you believe your account has been
+                            completely compromised!
+                          </p>
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel className="border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-bold">
+                          Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={revokeAllSessions}
+                          className="bg-red-700 hover:bg-red-800 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-black"
+                          disabled={revokingAll}
+                        >
+                          {revokingAll
+                            ? "ANNIHILATING..."
+                            : "💀 TOTAL ANNIHILATION 💀"}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              </BrutalBox>
+            </div>
           </div>
         </BrutalBox>
       </motion.div>

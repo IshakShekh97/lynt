@@ -28,6 +28,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { SignIn } from "@/lib/actions/auth.action";
 import { signInSchema, type SignInFormValues } from "@/lib/zodSchemas";
+import { authClient } from "@/lib/auth-client";
 
 const SignInForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -167,7 +168,43 @@ const SignInForm = () => {
                 )}
               />
 
-              <div className="pt-4">
+              <div className="pt-4 space-y-4">
+                {/* Forgot Password Link */}
+                <div className="text-center">
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const email = form.getValues("email");
+                      if (!email) {
+                        toast.error("💀 ENTER YOUR EMAIL FIRST! 💀", {
+                          description:
+                            "We need your email to send the reset link!",
+                        });
+                        return;
+                      }
+
+                      try {
+                        await authClient.requestPasswordReset({
+                          email,
+                          redirectTo: "/reset-password",
+                        });
+
+                        toast.success("🔥 RESET LINK SENT! 🔥", {
+                          description:
+                            "Check your email (and spam folder) for the brutal reset link!",
+                        });
+                      } catch {
+                        toast.error("💀 RESET REQUEST FAILED! 💀", {
+                          description: "Failed to send reset email. Try again!",
+                        });
+                      }
+                    }}
+                    className="text-sm font-bold text-primary hover:text-primary/80 uppercase underline decoration-2 underline-offset-2 transition-colors"
+                  >
+                    🔓 FORGOT PASSWORD? RESET IT BRUTALLY! 🔓
+                  </button>
+                </div>
+
                 <ShakeElement intensity="medium" trigger="hover">
                   <BrutalBox variant="destructive" glitchOnHover={true}>
                     <Button

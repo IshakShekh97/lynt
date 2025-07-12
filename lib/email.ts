@@ -2,174 +2,159 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function sendEmail({
-  to,
-  subject,
-  html,
-  text,
-}: {
-  to: string;
-  subject: string;
-  html: string;
-  text?: string;
-}) {
-  try {
-    const { data, error } = await resend.emails.send({
-      from: "Lynt <onboarding@resend.dev>", // Replace with your verified domain
-      to: [to],
-      subject,
-      html,
-      text,
-    });
+// Get email domain from environment or use default
+const getEmailDomain = () => {
+  // Use Resend's default domain if no custom domain is set
+  const customDomain = process.env.RESEND_EMAIL_DOMAIN;
+  return customDomain || "onboarding@resend.dev";
+};
+
+// Email templates with brutal styling
+export const emailTemplates = {
+  passwordReset: (user: { name?: string; email: string }, url: string) => ({
+    from: getEmailDomain(),
+    to: [user.email],
+    subject: "🔥 BRUTAL PASSWORD RESET - Destroy & Rebuild! 💀",
+    html: `
+      <div style="font-family: Arial, sans-serif; background: linear-gradient(135deg, #dc2626, #ea580c, #f59e0b); padding: 20px; border-radius: 12px; color: white;">
+        <div style="background: rgba(0,0,0,0.8); padding: 30px; border-radius: 8px; border: 3px solid #dc2626;">
+          <h1 style="color: #ef4444; font-size: 28px; font-weight: 900; text-transform: uppercase; margin: 0 0 20px 0; text-align: center;">
+            💀 PASSWORD ANNIHILATION REQUEST 💀
+          </h1>
+          <p style="font-size: 18px; font-weight: bold; margin: 15px 0;">Hey ${user.name || "Chaos Warrior"},</p>
+          <p style="font-size: 16px; margin: 15px 0;">
+            Someone (hopefully you) wants to BRUTALLY destroy your current password and forge a new one! 
+            If this wasn't you, ignore this email and your password remains untouchable.
+          </p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${url}" style="display: inline-block; background: linear-gradient(45deg, #dc2626, #ea580c); color: white; padding: 15px 30px; text-decoration: none; font-weight: 900; text-transform: uppercase; border-radius: 8px; border: 2px solid #ffffff; font-size: 16px; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);">
+              🔥 RESET PASSWORD NOW 🔥
+            </a>
+          </div>
+          <div style="background: rgba(220, 38, 38, 0.2); padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #dc2626;">
+            <p style="margin: 0; font-size: 14px; font-weight: bold;">
+              ⚠️ BRUTAL REMINDER: Check your spam folder if you don't see this email in your inbox!
+            </p>
+          </div>
+          <p style="font-size: 14px; color: #fbbf24; margin: 20px 0 0 0;">
+            This link expires in 1 hour. After that, you'll need to request another BRUTAL reset!
+          </p>
+        </div>
+      </div>
+    `,
+  }),
+
+  emailVerification: (user: { name?: string; email: string }, url: string) => ({
+    from: getEmailDomain(),
+    to: [user.email],
+    subject: "💀 VERIFY YOUR EMAIL - Join the Brutal Revolution! 🔥",
+    html: `
+      <div style="font-family: Arial, sans-serif; background: linear-gradient(135deg, #7c3aed, #dc2626, #ea580c); padding: 20px; border-radius: 12px; color: white;">
+        <div style="background: rgba(0,0,0,0.8); padding: 30px; border-radius: 8px; border: 3px solid #7c3aed;">
+          <h1 style="color: #a855f7; font-size: 28px; font-weight: 900; text-transform: uppercase; margin: 0 0 20px 0; text-align: center;">
+            ⚡ EMAIL VERIFICATION CHALLENGE ⚡
+          </h1>
+          <p style="font-size: 18px; font-weight: bold; margin: 15px 0;">Welcome to the chaos, ${user.name || "New Warrior"}!</p>
+          <p style="font-size: 16px; margin: 15px 0;">
+            Your brutal journey begins with EMAIL VERIFICATION! Click the button below to prove your worth and 
+            unlock the full power of your account.
+          </p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${url}" style="display: inline-block; background: linear-gradient(45deg, #7c3aed, #dc2626); color: white; padding: 15px 30px; text-decoration: none; font-weight: 900; text-transform: uppercase; border-radius: 8px; border: 2px solid #ffffff; font-size: 16px; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);">
+              💥 VERIFY & DOMINATE 💥
+            </a>
+          </div>
+          <div style="background: rgba(220, 38, 38, 0.2); padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #dc2626;">
+            <p style="margin: 0; font-size: 14px; font-weight: bold;">
+              ⚠️ BRUTAL REMINDER: Check your spam folder! Email providers sometimes fear our BRUTAL messages!
+            </p>
+          </div>
+          <p style="font-size: 14px; color: #fbbf24; margin: 20px 0 0 0;">
+            This verification link is your key to unlock ULTIMATE PROFILE POWER!
+          </p>
+        </div>
+      </div>
+    `,
+  }),
+
+  emailChange: (
+    user: { name?: string; email: string },
+    newEmail: string,
+    url: string
+  ) => ({
+    from: getEmailDomain(),
+    to: [user.email], // Send to current email for security
+    subject: "🚨 CONFIRM EMAIL CHANGE - Security Protocol Activated! ⚡",
+    html: `
+      <div style="font-family: Arial, sans-serif; background: linear-gradient(135deg, #dc2626, #ea580c, #f59e0b); padding: 20px; border-radius: 12px; color: white;">
+        <div style="background: rgba(0,0,0,0.8); padding: 30px; border-radius: 8px; border: 3px solid #dc2626;">
+          <h1 style="color: #ef4444; font-size: 28px; font-weight: 900; text-transform: uppercase; margin: 0 0 20px 0; text-align: center;">
+            🔥 EMAIL CHANGE AUTHORIZATION 🔥
+          </h1>
+          <p style="font-size: 18px; font-weight: bold; margin: 15px 0;">Security Alert, ${user.name || "Warrior"}!</p>
+          <p style="font-size: 16px; margin: 15px 0;">
+            Someone (hopefully you) wants to change your email from <strong>${user.email}</strong> to <strong>${newEmail}</strong>.
+          </p>
+          <p style="font-size: 16px; margin: 15px 0;">
+            Click below to BRUTALLY approve this change and secure your new digital identity!
+          </p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${url}" style="display: inline-block; background: linear-gradient(45deg, #dc2626, #ea580c); color: white; padding: 15px 30px; text-decoration: none; font-weight: 900; text-transform: uppercase; border-radius: 8px; border: 2px solid #ffffff; font-size: 16px; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);">
+              ⚡ APPROVE EMAIL CHANGE ⚡
+            </a>
+          </div>
+          <div style="background: rgba(220, 38, 38, 0.2); padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #dc2626;">
+            <p style="margin: 0; font-size: 14px; font-weight: bold;">
+              ⚠️ BRUTAL REMINDER: Check your spam folder! This security email might be hiding there!
+            </p>
+          </div>
+          <p style="font-size: 14px; color: #fbbf24; margin: 20px 0 0 0;">
+            If you didn't request this change, ignore this email. Your account remains secure!
+          </p>
+        </div>
+      </div>
+    `,
+  }),
+};
+
+// Email service functions
+export const emailService = {
+  async sendPasswordReset(user: { name?: string; email: string }, url: string) {
+    const emailData = emailTemplates.passwordReset(user, url);
+    const { error } = await resend.emails.send(emailData);
 
     if (error) {
-      console.error("Error sending email:", error);
-      throw new Error(`Email sending failed: ${error.message}`);
+      console.error("Password reset email error:", error);
+      throw new Error("Failed to send password reset email");
     }
+  },
 
-    return data;
-  } catch (error) {
-    console.error("Error sending email:", error);
-    throw error;
-  }
-}
+  async sendEmailVerification(
+    user: { name?: string; email: string },
+    url: string
+  ) {
+    const emailData = emailTemplates.emailVerification(user, url);
+    const { error } = await resend.emails.send(emailData);
 
-export async function sendVerificationEmail({
-  email,
-  url,
-}: {
-  email: string;
-  url: string;
-  token: string;
-}) {
-  const subject = "Verify your email address";
-  const html = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 10px; text-align: center;">
-        <h1 style="color: white; margin: 0; font-size: 28px;">🔗 Verify Your Email</h1>
-      </div>
-      
-      <div style="background: white; padding: 30px; border-radius: 10px; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        <p style="font-size: 16px; color: #333; margin-bottom: 20px;">
-          Hey there! Welcome to Lynt. Click the button below to verify your email address and get started.
-        </p>
-        
-        <div style="text-align: center; margin: 30px 0;">
-          <a href="${url}" 
-             style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                    color: white; 
-                    padding: 12px 30px; 
-                    text-decoration: none; 
-                    border-radius: 25px; 
-                    font-weight: bold; 
-                    display: inline-block;
-                    transition: transform 0.2s ease;">
-            Verify Email Address
-          </a>
-        </div>
-        
-        <p style="font-size: 14px; color: #666; margin-top: 20px;">
-          If the button doesn't work, copy and paste this link into your browser:
-        </p>
-        <p style="font-size: 14px; color: #667eea; word-break: break-all;">
-          ${url}
-        </p>
-        
-        <p style="font-size: 12px; color: #999; margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
-          This verification link will expire in 24 hours. If you didn't create an account with Lynt, you can safely ignore this email.
-        </p>
-      </div>
-    </div>
-  `;
+    if (error) {
+      console.error("Email verification error:", error);
+      throw new Error("Failed to send verification email");
+    }
+  },
 
-  const text = `
-    Welcome to Lynt!
-    
-    Please verify your email address by clicking the following link:
-    ${url}
-    
-    If the link doesn't work, copy and paste it into your browser.
-    
-    This verification link will expire in 24 hours.
-    
-    If you didn't create an account with Lynt, you can safely ignore this email.
-  `;
+  async sendEmailChangeConfirmation(
+    user: { name?: string; email: string },
+    newEmail: string,
+    url: string
+  ) {
+    const emailData = emailTemplates.emailChange(user, newEmail, url);
+    const { error } = await resend.emails.send(emailData);
 
-  return sendEmail({
-    to: email,
-    subject,
-    html,
-    text,
-  });
-}
+    if (error) {
+      console.error("Email change verification error:", error);
+      throw new Error("Failed to send email change verification");
+    }
+  },
+};
 
-export async function sendPasswordResetEmail({
-  email,
-  url,
-}: {
-  email: string;
-  url: string;
-  token: string;
-}) {
-  const subject = "Reset your password";
-  const html = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <div style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); padding: 30px; border-radius: 10px; text-align: center;">
-        <h1 style="color: white; margin: 0; font-size: 28px;">🔒 Reset Your Password</h1>
-      </div>
-      
-      <div style="background: white; padding: 30px; border-radius: 10px; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        <p style="font-size: 16px; color: #333; margin-bottom: 20px;">
-          We received a request to reset your password for your Lynt account. Click the button below to create a new password.
-        </p>
-        
-        <div style="text-align: center; margin: 30px 0;">
-          <a href="${url}" 
-             style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); 
-                    color: white; 
-                    padding: 12px 30px; 
-                    text-decoration: none; 
-                    border-radius: 25px; 
-                    font-weight: bold; 
-                    display: inline-block;
-                    transition: transform 0.2s ease;">
-            Reset Password
-          </a>
-        </div>
-        
-        <p style="font-size: 14px; color: #666; margin-top: 20px;">
-          If the button doesn't work, copy and paste this link into your browser:
-        </p>
-        <p style="font-size: 14px; color: #ff6b6b; word-break: break-all;">
-          ${url}
-        </p>
-        
-        <p style="font-size: 12px; color: #999; margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
-          This password reset link will expire in 1 hour. If you didn't request a password reset, you can safely ignore this email.
-        </p>
-      </div>
-    </div>
-  `;
-
-  const text = `
-    Password Reset Request
-    
-    We received a request to reset your password for your Lynt account.
-    
-    Click the following link to reset your password:
-    ${url}
-    
-    If the link doesn't work, copy and paste it into your browser.
-    
-    This password reset link will expire in 1 hour.
-    
-    If you didn't request a password reset, you can safely ignore this email.
-  `;
-
-  return sendEmail({
-    to: email,
-    subject,
-    html,
-    text,
-  });
-}
+export default emailService;

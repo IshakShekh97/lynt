@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
@@ -15,6 +15,7 @@ import {
   Calendar,
   MapPin,
   Loader2,
+  RefreshCw,
 } from "lucide-react";
 
 interface Session {
@@ -35,13 +36,10 @@ interface SessionsListProps {
 export function SessionsList({ currentSessionId }: SessionsListProps) {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [revoking, setRevoking] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadSessions();
-  }, []);
-
-  const loadSessions = async () => {
+  const loadSessions = useCallback(async () => {
     try {
       setLoading(true);
       const sessionsList = await authClient.listSessions();
@@ -52,14 +50,33 @@ export function SessionsList({ currentSessionId }: SessionsListProps) {
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  const refreshSessions = async () => {
+    try {
+      setRefreshing(true);
+      const sessionsList = await authClient.listSessions();
+      setSessions(sessionsList.data || []);
+      toast.success("Sessions refreshed");
+    } catch (error) {
+      console.error("Failed to refresh sessions:", error);
+      toast.error("Failed to refresh sessions");
+    } finally {
+      setRefreshing(false);
+    }
   };
+
+  useEffect(() => {
+    loadSessions();
+  }, [loadSessions]);
 
   const revokeSession = async (sessionToken: string) => {
     try {
       setRevoking(sessionToken);
       await authClient.revokeSession({ token: sessionToken });
       toast.success("Session revoked successfully");
-      loadSessions(); // Reload sessions
+      // Reload sessions to reflect the change
+      await loadSessions();
     } catch (error) {
       console.error("Failed to revoke session:", error);
       toast.error("Failed to revoke session");
@@ -129,6 +146,27 @@ export function SessionsList({ currentSessionId }: SessionsListProps) {
 
   return (
     <div className="space-y-4">
+      {/* Header with refresh button */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-bold">
+          Active Sessions ({sessions.length})
+        </h3>
+        <ShakeElement>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={refreshSessions}
+            disabled={refreshing || loading}
+            className="border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
+          >
+            <RefreshCw
+              className={`h-4 w-4 mr-2 ${refreshing ? "animate-spin" : ""}`}
+            />
+            {refreshing ? "Refreshing..." : "Refresh"}
+          </Button>
+        </ShakeElement>
+      </div>
+
       {sessions.map((session) => {
         const isCurrentSession = session.id === currentSessionId;
 

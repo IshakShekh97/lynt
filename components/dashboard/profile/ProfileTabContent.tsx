@@ -11,6 +11,7 @@ import {
   ShakeElement,
 } from "@/components/ui/brutal-effects";
 import { Globe, Skull, Crown, Zap, Shield } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ProfileTabContentProps {
   user: {
@@ -124,8 +125,13 @@ export function ProfileTabContent({ user }: ProfileTabContentProps) {
                     💀 ACTIVE
                   </Badge>
 
-                  <Badge className="text-lg border-3 border-black bg-green-500 text-white font-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-3 py-1">
-                    🔥 VERIFIED
+                  <Badge
+                    className={cn(
+                      "text-lg border-3 border-black  text-white font-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-3 py-1",
+                      user.emailVerified ? "bg-green-500" : "bg-red-500"
+                    )}
+                  >
+                    {user.emailVerified ? "🔥 VERIFIED" : "❌ UNVERIFIED"}
                   </Badge>
                 </div>
               </div>

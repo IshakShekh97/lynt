@@ -2,8 +2,8 @@ import { PrismaClient } from "@prisma/client";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
-import { username } from "better-auth/plugins";
-import { sendVerificationEmail, sendPasswordResetEmail } from "./email";
+import { username, multiSession } from "better-auth/plugins";
+import { emailService } from "./email";
 
 const prisma = new PrismaClient();
 
@@ -13,26 +13,17 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: true,
-    autoSignIn: false,
-    sendResetPassword: async ({ user, url, token }) => {
-      await sendPasswordResetEmail({
-        email: user.email,
-        url,
-        token,
-      });
+    requireEmailVerification: false, // Making it optional as requested
+    sendResetPassword: async ({ user, url }) => {
+      await emailService.sendPasswordReset(user, url);
     },
   },
   emailVerification: {
-    sendOnSignUp: true,
-    autoSignInAfterVerification: true,
-    sendVerificationEmail: async ({ user, url, token }) => {
-      await sendVerificationEmail({
-        email: user.email,
-        url,
-        token,
-      });
+    sendVerificationEmail: async ({ user, url }) => {
+      await emailService.sendEmailVerification(user, url);
     },
+    sendOnSignUp: false, // We'll trigger manually from profile
+    autoSignInAfterVerification: false,
   },
   user: {
     additionalFields: {
@@ -44,26 +35,12 @@ export const auth = betterAuth({
     },
     changeEmail: {
       enabled: true,
-      sendChangeEmailVerification: async ({ user, url, token }) => {
-        await sendVerificationEmail({
-          email: user.email, // Send to current email for security
-          url,
-          token,
-        });
-      },
-    },
-    deleteUser: {
-      enabled: true,
-      sendDeleteAccountVerification: async ({ user, url, token }) => {
-        await sendVerificationEmail({
-          email: user.email,
-          url,
-          token,
-        });
+      sendChangeEmailVerification: async ({ user, newEmail, url }) => {
+        await emailService.sendEmailChangeConfirmation(user, newEmail, url);
       },
     },
   },
-  plugins: [username(), nextCookies()],
+  plugins: [username(), multiSession(), nextCookies()],
 });
 
 export const { getSession } = auth.api;
