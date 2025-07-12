@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,7 @@ import { BrutalLoadingSpinner } from "@/components/ui/brutal-loading-spinner";
 import { Skull, Shield, AlertTriangle, CheckCircle } from "lucide-react";
 import Link from "next/link";
 
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -267,5 +267,64 @@ export default function ResetPasswordPage() {
         </BrutalBox>
       </motion.div>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-red-500/10 via-orange-500/10 to-yellow-500/10">
+          <div className="w-full max-w-md">
+            <BrutalBox className="p-8 bg-gradient-to-br from-red-500/10 via-orange-500/10 to-yellow-500/10 border-4 border-black shadow-[16px_16px_0px_0px_rgba(0,0,0,1)]">
+              <div className="space-y-8">
+                {/* Header Skeleton */}
+                <div className="text-center space-y-4">
+                  <div className="mx-auto h-16 w-16 rounded-full bg-gray-200 animate-pulse" />
+                  <div className="h-8 w-2/3 mx-auto bg-gray-200 rounded animate-pulse" />
+                  <div className="h-5 w-1/2 mx-auto bg-gray-200 rounded animate-pulse" />
+                </div>
+                {/* Warning Skeleton */}
+                <BrutalBox className="p-4 border-2 border-yellow-500 bg-gradient-to-r from-yellow-500/20 to-orange-500/20">
+                  <div className="flex items-center gap-3 justify-center">
+                    <div className="h-5 w-5 rounded-full bg-yellow-200 animate-pulse" />
+                    <div className="h-4 w-40 bg-yellow-200 rounded animate-pulse" />
+                    <div className="h-5 w-5 rounded-full bg-yellow-200 animate-pulse" />
+                  </div>
+                </BrutalBox>
+                {/* Form Skeleton */}
+                <div className="space-y-6">
+                  <div className="space-y-3">
+                    <div className="h-5 w-32 bg-gray-200 rounded animate-pulse" />
+                    <BrutalBox className="p-0 border-2">
+                      <div className="h-10 w-full bg-gray-100 rounded animate-pulse" />
+                    </BrutalBox>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="h-5 w-40 bg-gray-200 rounded animate-pulse" />
+                    <BrutalBox className="p-0 border-2">
+                      <div className="h-10 w-full bg-gray-100 rounded animate-pulse" />
+                    </BrutalBox>
+                  </div>
+                  <div className="pt-4">
+                    <BrutalBox variant="destructive">
+                      <div className="h-12 w-full bg-red-200 rounded animate-pulse" />
+                    </BrutalBox>
+                  </div>
+                </div>
+                {/* Footer Skeleton */}
+                <div className="text-center">
+                  <BrutalBox className="inline-block p-3">
+                    <div className="h-4 w-48 bg-gray-200 rounded animate-pulse mx-auto" />
+                  </BrutalBox>
+                </div>
+              </div>
+            </BrutalBox>
+          </div>
+        </div>
+      }
+    >
+      <ResetPasswordContent />
+    </Suspense>
   );
 }
