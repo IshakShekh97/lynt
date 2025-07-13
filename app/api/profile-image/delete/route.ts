@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 export async function DELETE() {
   try {
@@ -23,6 +24,11 @@ export async function DELETE() {
         updatedAt: new Date(),
       },
     });
+
+    // Revalidate relevant paths to update the cached data
+    revalidatePath("/dashboard");
+    revalidatePath("/dashboard/profile");
+    revalidatePath(`/api/profile-image/${session.user.id}`);
 
     return NextResponse.json({
       success: true,

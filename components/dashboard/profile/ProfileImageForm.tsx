@@ -15,6 +15,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { ImageCropperDialog } from "@/components/ui/image-cropper-dialog";
 import { toast } from "sonner";
 import { Upload, Trash2, Camera } from "lucide-react";
 import {
@@ -23,6 +24,7 @@ import {
   ShakeElement,
 } from "@/components/ui/brutal-effects";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 interface ProfileImageFormProps {
   currentImage?: string | null;
@@ -35,26 +37,64 @@ export function ProfileImageForm({
   userName,
   onImageUpdate,
 }: ProfileImageFormProps) {
+  const router = useRouter();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isCropperOpen, setIsCropperOpen] = useState(false);
+  const [imageForCropping, setImageForCropping] = useState<string | null>(null);
 
   const handleFileSelect = (file: File) => {
     setSelectedFile(file);
 
-    // Create preview URL
+    // Create preview URL for cropping
     const reader = new FileReader();
     reader.onload = (e) => {
-      setPreviewUrl(e.target?.result as string);
+      const imageUrl = e.target?.result as string;
+      setImageForCropping(imageUrl);
+      setIsCropperOpen(true);
     };
     reader.readAsDataURL(file);
   };
 
   const handleFileRemove = () => {
+    // Clean up blob URL if it exists
+    if (previewUrl && previewUrl.startsWith("blob:")) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    if (imageForCropping && imageForCropping.startsWith("blob:")) {
+      URL.revokeObjectURL(imageForCropping);
+    }
+
     setSelectedFile(null);
     setPreviewUrl(null);
+    setImageForCropping(null);
+    setIsCropperOpen(false);
+  };
+
+  const handleCropperClose = () => {
+    setIsCropperOpen(false);
+    // Don't clear imageForCropping here so user can re-open cropper
+  };
+
+  const handleCropComplete = async (croppedBlob: Blob) => {
+    // Convert blob to file
+    const croppedFile = new File([croppedBlob], "cropped-image.jpg", {
+      type: "image/jpeg",
+    });
+
+    // Create preview URL from cropped image
+    const croppedUrl = URL.createObjectURL(croppedBlob);
+    setPreviewUrl(croppedUrl);
+
+    // Update selected file with cropped version
+    setSelectedFile(croppedFile);
+
+    // Close cropper
+    setIsCropperOpen(false);
+    setImageForCropping(null);
   };
 
   const handleUpload = async () => {
@@ -64,6 +104,12 @@ export function ProfileImageForm({
     }
 
     setIsUploading(true);
+
+    // Show loading toast
+    const loadingToast = toast.loading("🔥 Uploading your brutal image...", {
+      description: "This might take a moment, stay awesome!",
+    });
+
     try {
       const formData = new FormData();
       formData.append("file", selectedFile);
@@ -80,16 +126,41 @@ export function ProfileImageForm({
 
       const result = await response.json();
 
-      toast.success("Profile image updated successfully!");
+      // Dismiss loading toast
+      toast.dismiss(loadingToast);
+
+      // Show success toast
+      toast.success("💥 Profile image updated successfully!", {
+        description: "Your new brutal look is now live!",
+        duration: 4000,
+      });
+
       onImageUpdate?.(result.imageUrl);
+
+      // Clean up blob URL if it exists
+      if (previewUrl && previewUrl.startsWith("blob:")) {
+        URL.revokeObjectURL(previewUrl);
+      }
 
       // Clear the form and close dialog
       setSelectedFile(null);
       setPreviewUrl(null);
+      setImageForCropping(null);
       setIsDialogOpen(false);
+
+      // Refresh the page to show the new image immediately
+      setTimeout(() => {
+        router.refresh();
+      }, 1000); // Small delay to let the toast show
     } catch (error) {
+      // Dismiss loading toast
+      toast.dismiss(loadingToast);
+
       console.error("Error uploading image:", error);
-      toast.error("Failed to upload image. Please try again.");
+      toast.error("💀 Failed to upload image", {
+        description: "Something went wrong. Please try again!",
+        duration: 4000,
+      });
     } finally {
       setIsUploading(false);
     }
@@ -102,6 +173,12 @@ export function ProfileImageForm({
     }
 
     setIsDeleting(true);
+
+    // Show loading toast
+    const loadingToast = toast.loading("🗑️ Deleting your profile image...", {
+      description: "Removing your brutal look...",
+    });
+
     try {
       const response = await fetch("/api/profile-image/delete", {
         method: "DELETE",
@@ -112,11 +189,30 @@ export function ProfileImageForm({
         throw new Error(error);
       }
 
-      toast.success("Profile image deleted successfully!");
+      // Dismiss loading toast
+      toast.dismiss(loadingToast);
+
+      // Show success toast
+      toast.success("💀 Profile image deleted successfully!", {
+        description: "Your profile image has been removed.",
+        duration: 4000,
+      });
+
       onImageUpdate?.(null);
+
+      // Refresh the page to show the changes immediately
+      setTimeout(() => {
+        router.refresh();
+      }, 1000); // Small delay to let the toast show
     } catch (error) {
+      // Dismiss loading toast
+      toast.dismiss(loadingToast);
+
       console.error("Error deleting image:", error);
-      toast.error("Failed to delete image. Please try again.");
+      toast.error("💥 Failed to delete image", {
+        description: "Something went wrong. Please try again!",
+        duration: 4000,
+      });
     } finally {
       setIsDeleting(false);
     }
@@ -195,22 +291,54 @@ export function ProfileImageForm({
               </AlertDialogHeader>
 
               <div className="space-y-3 sm:space-y-4">
-                <FileDropzone
-                  onFileSelect={handleFileSelect}
-                  onFileRemove={handleFileRemove}
-                  preview={previewUrl}
-                  disabled={isUploading}
-                  showPreview={true}
-                  className="border-2 border-black"
-                />
+                {!previewUrl ? (
+                  <FileDropzone
+                    onFileSelect={handleFileSelect}
+                    onFileRemove={handleFileRemove}
+                    preview={previewUrl}
+                    disabled={isUploading}
+                    showPreview={false}
+                    className="border-2 border-black"
+                  />
+                ) : (
+                  <div className="space-y-3">
+                    <div className="flex justify-center">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={previewUrl}
+                        alt="Cropped preview"
+                        className="h-32 w-32 object-cover border-2 border-black rounded"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          if (imageForCropping) {
+                            setIsCropperOpen(true);
+                          }
+                        }}
+                        className="flex-1 font-black border-2 border-black"
+                      >
+                        ✂️ RE-CROP
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={handleFileRemove}
+                        className="flex-1 font-black border-2 border-black"
+                      >
+                        🗑️ REMOVE
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <AlertDialogFooter className="flex flex-col gap-2 sm:flex-row sm:gap-2">
                 <AlertDialogCancel
                   className="font-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-xs sm:text-sm lg:text-base order-2 sm:order-1"
                   onClick={() => {
-                    setSelectedFile(null);
-                    setPreviewUrl(null);
+                    handleFileRemove();
                   }}
                 >
                   💀 CANCEL
@@ -220,13 +348,17 @@ export function ProfileImageForm({
                   disabled={!selectedFile || isUploading}
                   className={cn(
                     "font-black text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all text-xs sm:text-sm lg:text-base order-1 sm:order-2",
-                    "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                    isUploading
+                      ? "bg-gradient-to-r from-orange-500 to-red-600"
+                      : "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
                   )}
                 >
                   {isUploading ? (
                     <>
-                      <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-2 border-white border-t-transparent mr-1 sm:mr-2" />
-                      UPLOADING...
+                      <div className="flex items-center">
+                        <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-2 border-white border-t-transparent mr-2" />
+                        <span className="animate-pulse">🔥 UPLOADING...</span>
+                      </div>
                     </>
                   ) : (
                     <>
@@ -251,8 +383,10 @@ export function ProfileImageForm({
             >
               {isDeleting ? (
                 <>
-                  <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-2 border-white border-t-transparent mr-1 sm:mr-2" />
-                  DELETING...
+                  <div className="flex items-center">
+                    <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-2 border-white border-t-transparent mr-2" />
+                    <span className="animate-pulse">🗑️ DELETING...</span>
+                  </div>
                 </>
               ) : (
                 <>
@@ -273,6 +407,17 @@ export function ProfileImageForm({
           </p>
         </div>
       </div>
+
+      {/* Image Cropper Dialog */}
+      {imageForCropping && (
+        <ImageCropperDialog
+          isOpen={isCropperOpen}
+          onClose={handleCropperClose}
+          imageSrc={imageForCropping}
+          onCropComplete={handleCropComplete}
+          isProcessing={isUploading}
+        />
+      )}
     </BrutalBox>
   );
 }

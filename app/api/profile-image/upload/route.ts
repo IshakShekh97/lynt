@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_TYPES = [
@@ -65,6 +66,11 @@ export async function POST(request: NextRequest) {
 
     // Generate a URL for the image
     const imageUrl = `/api/profile-image/${session.user.id}`;
+
+    // Revalidate relevant paths to update the cached data
+    revalidatePath("/dashboard");
+    revalidatePath("/dashboard/profile");
+    revalidatePath(`/api/profile-image/${session.user.id}`);
 
     return NextResponse.json({
       success: true,
