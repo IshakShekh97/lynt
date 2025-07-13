@@ -7,7 +7,6 @@ import { User, Activity, Trash2, Skull, Flame, Zap } from "lucide-react";
 import { ProfileTabContent } from "@/components/dashboard/profile/ProfileTabContent";
 import { SessionsTabContent } from "@/components/dashboard/profile/SessionsTabContent";
 import { DangerTabContent } from "@/components/dashboard/profile/DangerTabContent";
-import { ProfileSkeleton } from "@/components/dashboard/profile/ProfileSkeleton";
 import {
   BrutalBox,
   GlitchText,
@@ -17,6 +16,7 @@ import { FloatingGeometricShapes } from "@/components/landing/FloatingGeometricS
 import { Badge } from "@/components/ui/badge";
 import { useSession } from "@/lib/auth-client";
 import { redirect } from "next/navigation";
+import { ProfileSkeleton } from "@/components/loading-skeletons";
 
 const containerVariants = {
   hidden: { opacity: 0 },

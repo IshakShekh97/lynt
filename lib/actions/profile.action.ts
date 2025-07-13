@@ -309,3 +309,43 @@ export const hasProfileImage = async (userId: string): Promise<boolean> => {
     return false;
   }
 };
+
+export const updateTheme = async (themeName: string) => {
+  try {
+    const headersList = await headers();
+    const session = await auth.api.getSession({
+      headers: headersList,
+    });
+
+    if (!session) {
+      throw new Error("Unauthorized");
+    }
+
+    const userId = session.user.id;
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        theme: themeName,
+        updatedAt: new Date(),
+      },
+    });
+
+    // Log the theme change activity
+    await logActivity({
+      userId,
+      action: "updated",
+      entity: "user",
+      entityId: userId,
+      details: {
+        field: "theme",
+        newValue: themeName,
+      },
+    });
+
+    return { success: true, theme: updatedUser.theme };
+  } catch (error) {
+    console.error("Error updating theme:", error);
+    throw new Error("Failed to update theme");
+  }
+};
