@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Menu, X, LogOut, User } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { useSession, signOut } from "@/lib/auth-client";
@@ -63,18 +63,22 @@ export default function Navigation() {
           {/* Desktop Navigation - Only Auth Related */}
           <div className="hidden md:flex items-center space-x-6">
             {session && (
-              <ShakeElement intensity="low" trigger="hover">
-                <Link href="/dashboard">
-                  <BrutalBox
-                    variant={pathname === "/dashboard" ? "warning" : "default"}
-                    className="px-4 py-2 transform hover:scale-105 transition-all duration-200"
-                  >
-                    <span className="font-bold text-sm tracking-wider uppercase">
-                      🔥 DASHBOARD
-                    </span>
-                  </BrutalBox>
-                </Link>
-              </ShakeElement>
+              <>
+                <ShakeElement intensity="low" trigger="hover">
+                  <Link href="/dashboard">
+                    <BrutalBox
+                      variant={
+                        pathname === "/dashboard" ? "warning" : "default"
+                      }
+                      className="px-4 py-2 transform hover:scale-105 transition-all duration-200"
+                    >
+                      <span className="font-bold text-sm tracking-wider uppercase">
+                        🔥 DASHBOARD
+                      </span>
+                    </BrutalBox>
+                  </Link>
+                </ShakeElement>
+              </>
             )}
           </div>
 
@@ -162,7 +166,6 @@ export default function Navigation() {
                         href="/dashboard/profile"
                         className="flex items-center gap-2 font-bold cursor-pointer"
                       >
-                        <User className="h-4 w-4" />
                         <span>👤 PROFILE</span>
                       </Link>
                     </DropdownMenuItem>
@@ -171,7 +174,6 @@ export default function Navigation() {
                       className="flex items-center gap-2 font-bold cursor-pointer text-destructive focus:text-destructive"
                       onClick={handleSignOut}
                     >
-                      <LogOut className="h-4 w-4" />
                       <span>💀 SIGN OUT</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -211,24 +213,26 @@ export default function Navigation() {
           >
             <div className="px-2 pt-2 pb-3 space-y-3">
               {session && (
-                <ShakeElement intensity="low" trigger="hover">
-                  <Link
-                    href="/dashboard"
-                    className="block"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <BrutalBox
-                      variant={
-                        pathname === "/dashboard" ? "warning" : "default"
-                      }
-                      className="w-full p-3 text-center"
+                <>
+                  <ShakeElement intensity="low" trigger="hover">
+                    <Link
+                      href="/dashboard"
+                      className="block"
+                      onClick={() => setIsMenuOpen(false)}
                     >
-                      <span className="font-bold text-lg tracking-wider uppercase">
-                        🔥 DASHBOARD
-                      </span>
-                    </BrutalBox>
-                  </Link>
-                </ShakeElement>
+                      <BrutalBox
+                        variant={
+                          pathname === "/dashboard" ? "warning" : "default"
+                        }
+                        className="w-full p-3 text-center"
+                      >
+                        <span className="font-bold text-lg tracking-wider uppercase">
+                          🔥 DASHBOARD
+                        </span>
+                      </BrutalBox>
+                    </Link>
+                  </ShakeElement>
+                </>
               )}
 
               <div className="pt-3 border-t-2 border-foreground">
@@ -291,7 +295,23 @@ export default function Navigation() {
                           className="w-full p-3 text-center"
                         >
                           <span className="font-bold text-lg tracking-wider uppercase">
-                            � PROFILE
+                            👤 PROFILE
+                          </span>
+                        </BrutalBox>
+                      </Link>
+                    </ShakeElement>
+                    <ShakeElement intensity="low" trigger="hover">
+                      <Link
+                        href={`/${session.user.username || session.user.id}`}
+                        className="block"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <BrutalBox
+                          variant="default"
+                          className="w-full p-3 text-center"
+                        >
+                          <span className="font-bold text-lg tracking-wider uppercase">
+                            🌐 PUBLIC PROFILE
                           </span>
                         </BrutalBox>
                       </Link>
