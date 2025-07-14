@@ -178,12 +178,9 @@ export function PublicProfilePage({ user }: PublicProfilePageProps) {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePos({ x: e.clientX, y: e.clientY });
     };
-
-    if (isFullscreen) {
-      window.addEventListener("mousemove", handleMouseMove);
-      return () => window.removeEventListener("mousemove", handleMouseMove);
-    }
-  }, [isFullscreen, isMounted]);
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [isMounted]);
 
   // Get current theme and animation objects
   const theme =
@@ -221,10 +218,6 @@ export function PublicProfilePage({ user }: PublicProfilePageProps) {
 
       // Open the link
       window.open(link.url, "_blank", "noopener,noreferrer");
-
-      toast.success(
-        `💀 LINK BRUTALLY CLICKED! ${link.clicks + 1} TOTAL CLICKS! 💀`
-      );
     } catch {
       console.error("Error tracking click");
       window.open(link.url, "_blank", "noopener,noreferrer");
@@ -388,18 +381,15 @@ END:VCARD`;
             background: `linear-gradient(135deg, ${theme.primary.replace("from-", "").replace(" to-", ", ")})`,
           }}
         >
-          {/* Cursor Trail Effect for Fullscreen */}
-          {isFullscreen && (
-            <div
-              className="fixed w-8 h-8 bg-white rounded-full pointer-events-none z-50 mix-blend-difference"
-              style={{
-                left: mousePos.x - 16,
-                top: mousePos.y - 16,
-                transition: "all 0.1s ease-out",
-              }}
-            />
-          )}
-
+          {/* Cursor Trail Effect - Always visible */}
+          <div
+            className="fixed w-8 h-8 bg-white rounded-full pointer-events-none z-50 mix-blend-difference opacity-60 transition-opacity duration-300 hover:opacity-100"
+            style={{
+              left: mousePos.x - 16,
+              top: mousePos.y - 16,
+              transition: "all 0.3s ease-out",
+            }}
+          />
           {/* Dynamic Background Pattern */}
           <div
             className="absolute inset-0 opacity-10"
@@ -695,7 +685,7 @@ END:VCARD`;
 
               {/* Enhanced Stats Panel */}
               <AnimatePresence>
-                {showStats && (
+                {showStats && isOwnProfile && (
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
