@@ -349,3 +349,52 @@ export const updateTheme = async (themeName: string) => {
     throw new Error("Failed to update theme");
   }
 };
+
+export const updateThemeAndAnimation = async (
+  colorTheme: string,
+  backgroundAnimation?: string
+) => {
+  try {
+    const headersList = await headers();
+    const session = await auth.api.getSession({
+      headers: headersList,
+    });
+
+    if (!session) {
+      throw new Error("Unauthorized");
+    }
+
+    const userId = session.user.id;
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        colorTheme,
+        backgroundAnimation,
+        updatedAt: new Date(),
+      },
+    });
+
+    // Log the theme change activity
+    await logActivity({
+      userId,
+      action: "updated",
+      entity: "user",
+      entityId: userId,
+      details: {
+        field: "colorTheme",
+        newValue: colorTheme,
+        backgroundAnimation,
+      },
+    });
+
+    return {
+      success: true,
+      colorTheme: updatedUser.colorTheme,
+      backgroundAnimation: updatedUser.backgroundAnimation,
+    };
+  } catch (error) {
+    console.error("Error updating theme and animation:", error);
+    throw new Error("Failed to update theme and animation");
+  }
+};

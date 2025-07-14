@@ -5,6 +5,7 @@ import Navigation from "@/components/landing/Navigation";
 import { PricingSection } from "@/components/landing/PricingSection";
 import { TestimonialsSection } from "@/components/landing/TestimonialsSection";
 import { WhyChooseSection } from "@/components/landing/WhyChooseSection";
+import { BrutalThemesSection } from "@/components/landing/BrutalThemesSection";
 import React from "react";
 
 const Home = () => {
@@ -13,6 +14,7 @@ const Home = () => {
       <Navigation />
       <HeroSection />
       <WhyChooseSection />
+      <BrutalThemesSection />
       <PricingSection />
       <TestimonialsSection />
       <CTASection />

@@ -12,6 +12,8 @@ export interface PublicUserProfile {
   profileImageMimeType?: string | null;
   displayUsername?: string | null;
   theme?: string | null;
+  colorTheme?: string | null;
+  backgroundAnimation?: string | null;
   createdAt: Date;
   links: {
     id: string;
@@ -53,6 +55,8 @@ export const getPublicUserProfile = async (
         profileImageMimeType: true,
         displayUsername: true,
         theme: true,
+        colorTheme: true,
+        backgroundAnimation: true,
         createdAt: true,
         links: {
           where: {

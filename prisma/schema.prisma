@@ -27,8 +27,10 @@ model User {
 
   bio String?
 
-  displayUsername String?
-  theme           String? // Store user's preferred theme
+  displayUsername     String?
+  theme               String? // Store user's preferred theme
+  colorTheme          String? // Store user's preferred color theme
+  backgroundAnimation String? // Store user's preferred background animation
 
   @@unique([email])
   @@unique([username])

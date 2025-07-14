@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { profileThemes } from "@/lib/constants/themes";
+import { colorThemes } from "@/lib/constants/color-themes";
+import { backgroundAnimations } from "@/lib/constants/animations";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -18,7 +19,7 @@ export function ThemeShowcase({ onSelectTheme }: ThemeShowcaseProps) {
   );
   const [copiedTheme, setCopiedTheme] = useState<string | null>(null);
 
-  const filteredThemes = profileThemes.filter(
+  const filteredThemes = colorThemes.filter(
     (theme) => theme.category === selectedCategory
   );
 
@@ -56,8 +57,8 @@ export function ThemeShowcase({ onSelectTheme }: ThemeShowcaseProps) {
             }`}
           >
             <Moon className="w-4 h-4" />
-            DARK MODE (
-            {profileThemes.filter((t) => t.category === "DARK").length})
+            DARK MODE ({colorThemes.filter((t) => t.category === "DARK").length}
+            )
           </Button>
           <Button
             onClick={() => setSelectedCategory("LIGHT")}
@@ -70,7 +71,7 @@ export function ThemeShowcase({ onSelectTheme }: ThemeShowcaseProps) {
           >
             <Sun className="w-4 h-4" />
             LIGHT MODE (
-            {profileThemes.filter((t) => t.category === "LIGHT").length})
+            {colorThemes.filter((t) => t.category === "LIGHT").length})
           </Button>
         </div>
       </div>
@@ -127,16 +128,6 @@ export function ThemeShowcase({ onSelectTheme }: ThemeShowcaseProps) {
                       background: `linear-gradient(135deg, ${theme.primary.replace("from-", "").replace(" to-", ", ")})`,
                     }}
                   >
-                    {/* Pattern Preview */}
-                    <div
-                      className="absolute inset-0 opacity-20"
-                      style={{
-                        backgroundImage: getPatternPreview(theme.pattern),
-                        backgroundSize: "20px 20px",
-                        animation: `${getAnimationName(theme.pattern)} 3s linear infinite`,
-                      }}
-                    />
-
                     {/* Sample Elements */}
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div
@@ -156,7 +147,7 @@ export function ThemeShowcase({ onSelectTheme }: ThemeShowcaseProps) {
                     {theme.description}
                   </p>
 
-                  {/* Pattern Info */}
+                  {/* Theme Info */}
                   <div className="flex items-center justify-between">
                     <span
                       className={`text-xs font-bold ${
@@ -165,19 +156,17 @@ export function ThemeShowcase({ onSelectTheme }: ThemeShowcaseProps) {
                           : "text-gray-500"
                       }`}
                     >
-                      PATTERN: {theme.pattern.toUpperCase()}
+                      MODE: {theme.mode.toUpperCase()}
                     </span>
                     <Badge
                       variant="outline"
                       className={`text-xs font-bold ${
-                        theme.pattern.includes("animated")
-                          ? "bg-green-100 text-green-800"
-                          : "bg-gray-100 text-gray-600"
+                        theme.mode === "dark"
+                          ? "bg-gray-100 text-gray-800"
+                          : "bg-blue-100 text-blue-600"
                       }`}
                     >
-                      {theme.pattern.includes("animated")
-                        ? "ANIMATED"
-                        : "STATIC"}
+                      {theme.mode.toUpperCase()}
                     </Badge>
                   </div>
 
@@ -228,7 +217,7 @@ export function ThemeShowcase({ onSelectTheme }: ThemeShowcaseProps) {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center">
               <div className="text-3xl font-black text-red-600">
-                {profileThemes.length}
+                {colorThemes.length}
               </div>
               <div className="text-sm font-bold text-gray-600 dark:text-gray-300">
                 TOTAL THEMES
@@ -236,7 +225,7 @@ export function ThemeShowcase({ onSelectTheme }: ThemeShowcaseProps) {
             </div>
             <div className="text-center">
               <div className="text-3xl font-black text-purple-600">
-                {profileThemes.filter((t) => t.category === "DARK").length}
+                {colorThemes.filter((t) => t.category === "DARK").length}
               </div>
               <div className="text-sm font-bold text-gray-600 dark:text-gray-300">
                 DARK THEMES
@@ -244,7 +233,7 @@ export function ThemeShowcase({ onSelectTheme }: ThemeShowcaseProps) {
             </div>
             <div className="text-center">
               <div className="text-3xl font-black text-yellow-600">
-                {profileThemes.filter((t) => t.category === "LIGHT").length}
+                {colorThemes.filter((t) => t.category === "LIGHT").length}
               </div>
               <div className="text-sm font-bold text-gray-600 dark:text-gray-300">
                 LIGHT THEMES
@@ -252,10 +241,7 @@ export function ThemeShowcase({ onSelectTheme }: ThemeShowcaseProps) {
             </div>
             <div className="text-center">
               <div className="text-3xl font-black text-green-600">
-                {
-                  profileThemes.filter((t) => t.pattern.includes("animated"))
-                    .length
-                }
+                {backgroundAnimations.length}
               </div>
               <div className="text-sm font-bold text-gray-600 dark:text-gray-300">
                 ANIMATED PATTERNS
@@ -266,27 +252,4 @@ export function ThemeShowcase({ onSelectTheme }: ThemeShowcaseProps) {
       </div>
     </div>
   );
-}
-
-// Helper functions for pattern preview
-function getPatternPreview(pattern: string): string {
-  switch (pattern) {
-    case "brutal-stripes-animated":
-      return `repeating-linear-gradient(45deg, currentColor 0px, currentColor 2px, transparent 2px, transparent 8px)`;
-    case "toxic-bubbles-animated":
-      return `radial-gradient(circle, currentColor 1px, transparent 1px)`;
-    case "electric-zigzag-animated":
-      return `linear-gradient(135deg, currentColor 25%, transparent 25%, transparent 75%, currentColor 75%)`;
-    case "wave-grid-animated":
-      return `linear-gradient(currentColor 0.5px, transparent 0.5px), linear-gradient(90deg, currentColor 0.5px, transparent 0.5px)`;
-    default:
-      return `linear-gradient(45deg, currentColor 25%, transparent 25%, transparent 75%, currentColor 75%)`;
-  }
-}
-
-function getAnimationName(pattern: string): string {
-  if (pattern.includes("animated")) {
-    return pattern.replace("-animated", "").replace("-", "") + "Spin";
-  }
-  return "none";
 }
