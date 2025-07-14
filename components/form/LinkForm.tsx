@@ -89,7 +89,10 @@ export const LinkForm: React.FC<LinkFormProps> = ({
                 Weapon Name <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
-                <Input placeholder="Enter weapon designation" {...field} />
+                <Input
+                  placeholder="Enter devastating weapon designation"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -107,7 +110,7 @@ export const LinkForm: React.FC<LinkFormProps> = ({
               <FormControl>
                 <Input
                   type="url"
-                  placeholder="https://target-destruction.com"
+                  placeholder="https://brutal-destruction-target.com"
                   {...field}
                 />
               </FormControl>
@@ -124,7 +127,7 @@ export const LinkForm: React.FC<LinkFormProps> = ({
               <FormLabel>Destruction Notes</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Optional battle details for your weapon"
+                  placeholder="Optional brutal warfare tactics and destruction details"
                   {...field}
                 />
               </FormControl>
@@ -186,11 +189,11 @@ export const LinkForm: React.FC<LinkFormProps> = ({
             onClick={onCancel}
             disabled={isSubmitting}
           >
-            Cancel
+            Abort Mission
           </Button>
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {editingLink ? "Upgrade Weapon" : "Deploy Weapon"}
+            {editingLink ? "💀 Enhance Weapon" : "🔥 Deploy Weapon"}
           </Button>
         </div>
       </form>

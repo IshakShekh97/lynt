@@ -102,7 +102,7 @@ export default function SocialLinksSection() {
       }
     } catch (error) {
       console.error("Error fetching social links:", error);
-      toast.error("Failed to load social links");
+      toast.error("Failed to load social warfare arsenal");
     } finally {
       setLoading(false);
     }
@@ -140,10 +140,10 @@ export default function SocialLinksSection() {
       );
 
       await toggleSocialLinkStatus(platform);
-      toast.success("Social link status updated");
+      toast.success("Social warfare link status upgraded");
     } catch (error) {
       console.error("Error toggling social link:", error);
-      toast.error("Failed to update social link status");
+      toast.error("Failed to upgrade social weapon status");
     }
   };
 
@@ -153,18 +153,18 @@ export default function SocialLinksSection() {
 
       const link = socialLinks.find((l) => l.platform === platform);
       if (!link || !link.url.trim()) {
-        toast.error("Please enter a valid URL");
+        toast.error("Please forge a valid warfare URL first");
         return;
       }
 
       await upsertSocialLink(platform, link.url, link.isActive);
-      toast.success("Social link saved successfully");
+      toast.success("Social warfare weapon deployed successfully");
 
       // Refresh the data
       await fetchSocialLinks();
     } catch (error) {
       console.error("Error saving social link:", error);
-      toast.error("Failed to save social link");
+      toast.error("Failed to deploy social warfare weapon");
     } finally {
       setSavingStates((prev) => ({ ...prev, [platform]: false }));
     }
@@ -177,10 +177,10 @@ export default function SocialLinksSection() {
       );
 
       await deleteSocialLink(platform);
-      toast.success("Social link deleted successfully");
+      toast.success("Social warfare weapon obliterated successfully");
     } catch (error) {
       console.error("Error deleting social link:", error);
-      toast.error("Failed to delete social link");
+      toast.error("Failed to obliterate social warfare weapon");
     }
   };
 
@@ -222,7 +222,7 @@ export default function SocialLinksSection() {
                   disabled={!url.trim()}
                 />
                 <Label className="text-xs text-muted-foreground">
-                  {isActive ? "Active" : "Inactive"}
+                  {isActive ? "Weapon Armed" : "Weapon Disabled"}
                 </Label>
               </div>
             </div>
@@ -230,7 +230,7 @@ export default function SocialLinksSection() {
             <div className="flex gap-2">
               <div className="flex-1 relative">
                 <Input
-                  placeholder={`Enter your ${platform.label} URL`}
+                  placeholder={`Enter your ${platform.label} warfare URL`}
                   value={url}
                   onChange={(e) =>
                     handleUrlChange(platform.name, e.target.value)

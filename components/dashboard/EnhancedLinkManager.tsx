@@ -215,9 +215,9 @@ export const EnhancedLinkManager: React.FC<EnhancedLinkManagerProps> = ({
     <Card>
       <CardHeader>
         <CardTitle className="text-lg flex items-center justify-between">
-          Weapon Arsenal
+          Death Arsenal
           <Badge variant="secondary" className="ml-2">
-            {links.length} weapons
+            {links.length} brutal weapons
           </Badge>
         </CardTitle>
       </CardHeader>
@@ -232,15 +232,15 @@ export const EnhancedLinkManager: React.FC<EnhancedLinkManagerProps> = ({
               <AlertDialogTrigger asChild>
                 <Button className="w-full" disabled={isReordering}>
                   <Plus className="mr-2 h-4 w-4" />
-                  Forge New Weapon
+                  Craft Deadly Weapon
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent className="max-w-md">
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Forge New Weapon</AlertDialogTitle>
+                  <AlertDialogTitle>Craft Deadly Weapon</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Add a new deadly link to your arsenal. Fill in the
-                    destruction details below.
+                    Forge a new brutal link for your arsenal of destruction.
+                    Fill in the carnage details below.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <LinkForm
@@ -255,7 +255,9 @@ export const EnhancedLinkManager: React.FC<EnhancedLinkManagerProps> = ({
               <div className="flex items-center justify-center p-4 bg-muted/30 rounded-lg border border-dashed border-primary/50">
                 <div className="flex items-center space-x-2 text-muted-foreground">
                   <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent"></div>
-                  <span className="text-sm">Reordering links...</span>
+                  <span className="text-sm">
+                    Reorganizing weapons arsenal...
+                  </span>
                 </div>
               </div>
             )}
@@ -275,12 +277,12 @@ export const EnhancedLinkManager: React.FC<EnhancedLinkManagerProps> = ({
                     <div className="text-center py-12 text-muted-foreground bg-muted/20 rounded-xl border-2 border-dashed border-muted-foreground/20">
                       <Plus className="h-16 w-16 mx-auto mb-4 opacity-40 text-primary" />
                       <p className="text-xl font-semibold mb-2">
-                        No weapons forged yet
+                        No weapons of mass destruction forged yet
                       </p>
                       <p className="text-sm max-w-md mx-auto">
-                        Your arsenal is empty. Click the &quot;Forge New
-                        Weapon&quot; button above to create your first deadly
-                        link.
+                        Your brutal arsenal is empty. Click the &quot;Craft
+                        Deadly Weapon&quot; button above to forge your first
+                        instrument of digital chaos.
                       </p>
                     </div>
                   ) : (
@@ -332,7 +334,7 @@ export const EnhancedLinkManager: React.FC<EnhancedLinkManagerProps> = ({
                                       variant="destructive"
                                       className="text-xs w-fit px-2 py-1 font-medium"
                                     >
-                                      ⚠️ Disabled
+                                      💀 Weapon Disabled
                                     </Badge>
                                   )}
                                   {link.isActive && (
@@ -340,7 +342,7 @@ export const EnhancedLinkManager: React.FC<EnhancedLinkManagerProps> = ({
                                       variant="default"
                                       className="text-xs w-fit px-2 py-1 font-medium bg-green-500 hover:bg-green-600"
                                     >
-                                      ✅ Active
+                                      🔥 Armed & Deadly
                                     </Badge>
                                   )}
                                 </div>
@@ -404,7 +406,7 @@ export const EnhancedLinkManager: React.FC<EnhancedLinkManagerProps> = ({
                                 >
                                   <Edit className="mr-3 h-4 w-4 text-blue-500" />
                                   <span className="font-medium">
-                                    Modify Weapon
+                                    Enhance Weapon
                                   </span>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
@@ -412,7 +414,9 @@ export const EnhancedLinkManager: React.FC<EnhancedLinkManagerProps> = ({
                                   className="text-red-600 focus:text-red-600 hover:bg-red-50 dark:hover:bg-red-950 transition-colors"
                                 >
                                   <Trash2 className="mr-3 h-4 w-4 text-red-500" />
-                                  <span className="font-medium">Destroy</span>
+                                  <span className="font-medium">
+                                    Obliterate
+                                  </span>
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
@@ -433,9 +437,10 @@ export const EnhancedLinkManager: React.FC<EnhancedLinkManagerProps> = ({
             >
               <AlertDialogContent className="max-w-md">
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Modify Weapon</AlertDialogTitle>
+                  <AlertDialogTitle>Enhance Weapon</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Update your weapon&apos;s destruction potential below.
+                    Upgrade your weapon&apos;s devastation capabilities and
+                    maximize destruction potential.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 {selectedLink && (
@@ -465,11 +470,12 @@ export const EnhancedLinkManager: React.FC<EnhancedLinkManagerProps> = ({
             >
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Destroy Weapon</AlertDialogTitle>
+                  <AlertDialogTitle>Annihilate Weapon</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Are you sure you want to obliterate &quot;
+                    Are you sure you want to permanently obliterate &quot;
                     {selectedLink?.title}
-                    &quot;? This nuclear action cannot be undone.
+                    &quot;? This devastating action will completely erase this
+                    weapon from existence.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <div className="flex justify-end space-x-2">
@@ -481,14 +487,14 @@ export const EnhancedLinkManager: React.FC<EnhancedLinkManagerProps> = ({
                     }}
                     disabled={isDeleting}
                   >
-                    Cancel
+                    Abort Mission
                   </Button>
                   <Button
                     variant="destructive"
                     onClick={handleDelete}
                     disabled={isDeleting}
                   >
-                    {isDeleting ? "Deleting..." : "Delete"}
+                    {isDeleting ? "Obliterating..." : "💀 Annihilate"}
                   </Button>
                 </div>
               </AlertDialogContent>

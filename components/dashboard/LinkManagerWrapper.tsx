@@ -1,6 +1,5 @@
 "use client";
 
-import { FloatingGeometricShapes } from "../landing/FloatingGeometricShapes";
 import { EnhancedLinkManager } from "./EnhancedLinkManager";
 import { useRouter } from "next/navigation";
 
@@ -32,7 +31,6 @@ export function LinkManagerWrapper({ links, userId }: LinkManagerWrapperProps) {
 
   return (
     <div className="relative">
-      <FloatingGeometricShapes />
       <EnhancedLinkManager
         links={links}
         userId={userId}
